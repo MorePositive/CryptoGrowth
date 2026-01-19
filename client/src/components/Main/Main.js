@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { getCoins, getRates, getTrends } from '../../api/coingecko';
 
@@ -18,7 +18,8 @@ const Main = () => {
   const [rates, setRates] = useState(null);
   const [trends, setTrends] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [value, setValue] = useState('');
+  
   useEffect(() => {
     Promise.all([
       getRates(data => setRates(data.rates)),
@@ -32,6 +33,8 @@ const Main = () => {
     });
   }, []);
 
+  const setfromList = useCallback((e) => setValue(e), [value]);
+
   return (
     <>
       <div className={'loader ' + (loading ? 'loading' : 'loaded')}><div className="loader_logo"></div></div>
@@ -39,10 +42,10 @@ const Main = () => {
         <Container>
           <Row>
             <Col lg={{ span: 5, offset: 1 }} className="start-form">
-              <Hero coins={coins} />
+              <Hero coins={coins} value={value} />
             </Col>
             <Col lg={{ span: 4, offset: 1 }}>
-              <TopCoins coins={coins} setCoinValue={() => {/* use redux? */}} />
+              <TopCoins coins={coins} setCoinValue={setfromList} />
             </Col>
           </Row>
         </Container>

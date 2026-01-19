@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
 import { priceFormat } from '../../helpers';
@@ -36,7 +36,7 @@ const customStyles = {
   singleValue: (styles) => ({ ...styles, color: '#fff' })  
 };
 
-const Hero = ({ coins }) => {
+const Hero = ({ coins, value }) => {
   const oldDate = new Date();
   oldDate.setFullYear(oldDate.getFullYear()-5);
 
@@ -46,6 +46,10 @@ const Hero = ({ coins }) => {
   const [dateValue, setDateValue] = useState(oldDate.toLocaleDateString('en-CA'));
   const [pastData, setPastData] = useState(null);
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    setCoinValue(value);
+  }, [value])
   
   const onSearch = (input, cb) => {
     fetch('/api/search/' + input.trim())
@@ -89,6 +93,7 @@ const Hero = ({ coins }) => {
       <div className="search">
         <Col className="label">Choose crypto asset: </Col>
         <Select
+          value={{ label: coinValue?.name, value: coinValue?.id }}
           styles={customStyles}
           isSearchable={true}
           onChange={e => setCoinValue(coins.find(({ id }) => id === e.value))}
@@ -138,7 +143,7 @@ const Hero = ({ coins }) => {
     let missedAmount;
     let percentIncrease;
     let isProfitableInvestment;
-    if (pastData) {
+    if (pastData && pastData.market_data) {
       try {
         const currentPrice = coinValue.current_price;
         const pastPrice = pastData.market_data.current_price.usd;
@@ -148,6 +153,8 @@ const Hero = ({ coins }) => {
       } catch (err) {
         console.log(err);
       }
+    } else if (!loading) {
+      return <p>Try to change the date</p>
     }
     return (
       <div className="result">

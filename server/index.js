@@ -58,7 +58,7 @@ const configureSSR = () => {
 };
 
 const startServer = () => {
-    var serverOptions;
+    var serverOptions = {};
     try {
         serverOptions.key = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/privkey.pem');
         serverOptions.cert = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/fullchain.pem');

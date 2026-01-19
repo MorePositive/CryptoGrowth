@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
@@ -38,11 +38,7 @@ const customStyles = {
 }
 
 export const Main = ({ coins, loader }) => {
-  const setLoading = (state) => {
-    loader(state);
-  };
-
-  var oldDate = new Date();
+  const oldDate = new Date();
   oldDate.setFullYear(oldDate.getFullYear()-5);
 
   const [coinValue, setCoinValue] = useState('');
@@ -51,10 +47,14 @@ export const Main = ({ coins, loader }) => {
   const [pastData, setPastData] = useState(null);
   const [step, setStep] = useState(0);
 
-  var priceFormat = new Intl.NumberFormat('en-US', {
+  const priceFormat = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
+
+  const setLoading = (state) => {
+    loader(state);
+  };
 
   const onSearch = (input, cb) => {
     fetch('/api/search/' + input.trim())
@@ -97,7 +97,6 @@ export const Main = ({ coins, loader }) => {
         <Col className="label">Choose crypto asset: </Col>
         <Select
           styles={customStyles}
-          menuColor="grey"
           isSearchable={true}
           onChange={e => setCoinValue(e.value)}
           loadOptions={onSearch}
@@ -146,8 +145,9 @@ export const Main = ({ coins, loader }) => {
   }
 
   const renderResults = () => {
-    var missedAmount, percentIncrease;
-    if(pastData) {
+    let missedAmount;
+    let percentIncrease;
+    if (pastData) {
       try {
         const currentPrice = coins.find(({ id }) => id === coinValue).current_price;
         const pastPrice = pastData.market_data.current_price.usd;
@@ -160,9 +160,9 @@ export const Main = ({ coins, loader }) => {
     return (
       <div className="result">
         <p>If you would have invested {priceFormat.format(amountValue)} starting on {dateValue}, you would have had today...</p>
-        <div className="missed">{ missedAmount
-        ? priceFormat.format(missedAmount)
-        : "calculating result..." }</div>
+        <div className="missed">
+          { missedAmount ? priceFormat.format(missedAmount) : "calculating result..." }
+        </div>
         { percentIncrease &&
           <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
         }

@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className={'loader ' + (loading ? 'loading' : 'loaded')}><div className="loader_logo"></div></div>
+      <div className={`loader ${loading ? 'loading' : 'loaded'}`}><div className="loader_logo"></div></div>
       <Header />
       <Main coins={coins} loader={setLoading} />
       <Container>
@@ -47,13 +47,17 @@ function App() {
           <Col xs="6">
             <Card><Card.Body>Capitalization of top 10 assets?</Card.Body></Card>
           </Col>
-          <Col xs="6"><Trends rates={rates} /></Col>
+          <Col xs="6">
+            <Trends rates={rates} />
+          </Col>
         </Row>
         <Row>
           <Col>
             <Card>
               <Card.Title>Latest headlines</Card.Title>
-              <Card.Body><Headlines /></Card.Body>
+              <Card.Body>
+                <Headlines />
+              </Card.Body>
             </Card>
           </Col>
         </Row>

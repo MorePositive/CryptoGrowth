@@ -1,12 +1,15 @@
-import { useState } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
-import { getHistorical } from '../../api/coingecko';
+import { getCoins, getHistorical, getRates } from '../../api/coingecko';
 import './main.scss';
 
 // Components
 import { TopCoins } from '../TopCoins/TopCoins';
+import { Trends } from '../Trends/Trends';
+import { Ads } from '../Ads/Ads';
+import { Headlines } from '../Headlines/Headlines';
 
 const customStyles = {
   control: (styles) => ({
@@ -37,9 +40,12 @@ const customStyles = {
   singleValue: (styles, { data }) => ({ ...styles, color: '#fff' })  
 }
 
-export const Main = ({ coins, loader }) => {
+export const Main = ({ loader }) => {
   const oldDate = new Date();
   oldDate.setFullYear(oldDate.getFullYear()-5);
+
+  const [coins, setCoins] = useState([]);
+  const [rates, setRates] = useState(null);
 
   const [coinValue, setCoinValue] = useState('');
   const [amountValue, setAmountValue] = useState(1000);
@@ -51,6 +57,15 @@ export const Main = ({ coins, loader }) => {
     style: 'currency',
     currency: 'USD',
   });
+
+  useEffect(() => {
+    Promise.all([
+      getRates((data) => setRates(data.rates)),
+      getCoins(data => setCoins(data)),
+    ]).then(() => {
+      setLoading(false);
+    });
+  }, []);
 
   const setLoading = (state) => {
     loader(state);
@@ -192,6 +207,7 @@ export const Main = ({ coins, loader }) => {
   }
 
   return (
+    <>
     <main className="highlight">
       <Container>
         <Row className="justify-content-md-center">
@@ -212,5 +228,34 @@ export const Main = ({ coins, loader }) => {
         </Row>
       </Container>
     </main>
+    <Container>
+    <Row>
+      <Col>
+        <Card>
+          <Card.Body>Some graphics? i.e. comparison of S&P with total crypto market</Card.Body>
+        </Card>
+      </Col>
+      <Ads />
+    </Row>
+    <Row>
+      <Col xs="6">
+        <Card><Card.Body>Capitalization of top 10 assets?</Card.Body></Card>
+      </Col>
+      <Col xs="6">
+        <Trends rates={rates} />
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <Card>
+          <Card.Title>Latest headlines</Card.Title>
+          <Card.Body>
+            <Headlines />
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
+  </Container>
+  </>
   )
 };

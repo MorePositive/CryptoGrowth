@@ -11,7 +11,8 @@ sudo apt-get install certbot
 sudo ufw allow 80
 sudo certbot certonly --standalone -d cryptogrowth.app
 sudo ls /etc/letsencrypt/live/cryptogrowth.app
-sudo chmod 644 /etc/letsencrypt/live/
+sudo chmod 644 /etc/letsencrypt/live/ -R
+sudo chown 644 /etc/letsencrypt/archive/ -R
 
 -------
 ssh-keygen

@@ -8,6 +8,7 @@ module.exports = {
     }, {
         name: "daily job",
         script: "./server/jobs/daily.js",
+        autorestart: false,
         cron_restart: "0 1 * * *"
     }]
 };

@@ -12,9 +12,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-      with:
-        ssh-key: ${{ secrets.SSH_KEY }}
-      
     - uses: actions/setup-node@v3
       name: Setup Node
       with:
@@ -22,4 +19,15 @@ jobs:
       
     - name: Install PM2
       run: npm install pm2@latest -g
+      
+    - uses: appleboy/ssh-action@master
+      name: Clone repo
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        key: ${{ secrets.SSH_KEY }}
+        username: ${{ secrets.SSH_USERNAME }}
+        run: git clone git@github.com:ilyaem/cryptogrowth.git cryptogrowth
+        
+    - name: Install modules
+      run: npm ci
       

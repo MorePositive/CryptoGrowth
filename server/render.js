@@ -3,6 +3,7 @@ import ReactDOMServer from 'react-dom/server';
 import ServerApp from '../client/src/ServerApp';
 
 module.exports = (req, res, indexFile) => {
+    console.log('rendering', Date.now());
     return res.send(
       indexFile.replace(
           '<div id="root"></div>',

@@ -33,12 +33,17 @@ function App() {
             <Card><Card.Body>Capitalization of top 10 assets?</Card.Body></Card>
           </Col>
           <Col xs="7">
-            <Card><Card.Body><Trends/></Card.Body></Card>
+            <Card>
+              <Card.Title>Trending coins</Card.Title>
+              <Card.Body><Trends/></Card.Body>
+            </Card>
           </Col>
         </Row>
         <Row>
           <Col>
-            <Card><Card.Body><Headlines/></Card.Body></Card>
+            <Card>
+              <Card.Title>Latest headlines</Card.Title>
+              <Card.Body><Headlines/></Card.Body></Card>
           </Col>
         </Row>
       </Container>

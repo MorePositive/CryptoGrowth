@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
+import { getHistorical } from '../../api/coingecko';
 
 // Components
 import { TopCoins } from '../TopCoins/TopCoins';
-//import { getHistorical } from '../../api/coingecko';
 
 const customStyles = {
   menu: (provided, state) => ({
@@ -16,15 +16,21 @@ const customStyles = {
   })
 };
 
-export const Main = () => {
+export const Main = ({ coins }) => {
   const [coinValue, setCoinValue] = useState('');
-  const [amountValue, setAmountValue] = useState('');
+  const [amountValue, setAmountValue] = useState(0);
   const [dateValue, setDateValue] = useState('');
+  const [pastData, setPastData] = useState(null);
+  const [missedAmount, setMissedAmount] = useState('');
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const isAllDone = coinValue && amountValue && dateValue;
   //pull options real time from "
+
+  useEffect(() => {
+    if (pastData) calculateMissedAmount();
+  }, [pastData])
 
   const onSearch = (input, cb) => {
     fetch('/api/search/' + input.trim())
@@ -104,17 +110,22 @@ export const Main = () => {
     )
   }
 
+  const calculateMissedAmount = () => {
+    const selectedCoinCurrentPrice = coins.find(({ id }) => id === coinValue).current_price;
+    const selectedCoinPastPrice = pastData.market_data.current_price.usd;
+    const missed = Number(amountValue) / selectedCoinPastPrice * selectedCoinCurrentPrice;
+    setLoading(false);
+    setMissedAmount(missed);
+  }
+
   const onHandleClick = () => {
     const isValid = validateInputs();
-    console.log(isValid)
     if (!isValid) return;
-    setStep(step => step +1);
+    setStep(step => step + 1);
     if (isAllDone) {
       setLoading(true);
-    //   //getMissedAmount
-    //   // dd-mm-yyyy eg. 30-12-2017
-    //   //const selectedCoinCurrentPrice = coins.find(({ value }) => value === coinValue).price;
-    //   getHistorical('bitcoin', '30-12-2021', data => console.log('data', data))
+      const pastDate = dateValue.split('-').reverse().join('-');
+      getHistorical(coinValue, pastDate, (data) => setPastData(data));
     }
   }
 
@@ -123,7 +134,7 @@ export const Main = () => {
     1: generateSecondStep(),
     2: generateThirdStep()
   }
-console.log('coin', coinValue, 'amount', amountValue, 'date', dateValue)
+
   return (
     <main className="highlight">
       <Container>
@@ -138,12 +149,13 @@ console.log('coin', coinValue, 'amount', amountValue, 'date', dateValue)
             </div>
             <div className="block-search container">
               { steps[step] }
+              { missedAmount && `${missedAmount.toFixed(0)}$` }
               { loading && <div className="loader"><div className="loader_logo"></div></div> }
              </div>
              { step < 3 && <button className="btn btn-primary mt-3 w25" onClick={onHandleClick}>{isAllDone ? 'Submit' : 'Next'}</button> }
           </Col>
           <Col md={{ span: 4, offset: 2 }}>
-            <TopCoins />
+            <TopCoins coins={coins} />
           </Col>
         </Row>
       </Container>

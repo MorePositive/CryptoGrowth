@@ -1,15 +1,19 @@
 import './topcoins.scss';
 
-export const TopCoins = () => {
+export const TopCoins = ({ coins }) => {
+  // decrease length to 10
+  const top10 = coins.slice(0, 10);
   return (
     <div className="block block-top">
       <table><tbody>
-        <tr><td><img src="" alt=""/>Bitcoin</td><td>500%</td></tr>
-        <tr><td><img src="" alt=""/>Ethereum</td><td>800%</td></tr>
-        <tr><td><img src="" alt=""/>Bitcoin</td><td>500%</td></tr>
-        <tr><td><img src="" alt=""/>Ethereum</td><td>800%</td></tr>
-        <tr><td><img src="" alt=""/>Bitcoin</td><td>500%</td></tr>
-        <tr><td><img src="" alt=""/>Ethereum</td><td>800%</td></tr>
+        { top10.map(coin => (
+          <tr className="table-line">
+            <td>{ coin.market_cap_rank }</td>
+            <td><img className="coin-img" src={coin.image} alt={coin.id}/></td>
+            <td>{ coin.name }</td>
+            <td>{ coin.current_price }$</td>
+          </tr>
+        )) }
       </tbody></table>
     </div>
   )

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { getRates } from './api/coingecko';
+import { getCoins, getRates } from './api/coingecko';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -13,12 +13,14 @@ import { Headlines } from './components/Headlines/Headlines';
 import { Footer } from './components/Footer/Footer';
 
 function App() {
+  const [coins, setCoins] = useState([]);
   const [rates, setRates] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       getRates((data) => setRates(data.rates)),
+      getCoins(data => setCoins(data)),
       new Promise(function(resolve) { 
         setTimeout(resolve.bind(null), 1000)
       })
@@ -31,7 +33,7 @@ function App() {
     <div className="App">
       <div className={'loader ' + (loading ? 'loading' : 'loaded')}><div className="loader_logo"></div></div>
       <Header />
-      <Main />
+      <Main coins={coins} />
       <Container>
         <Row>
           <Col>

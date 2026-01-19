@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ilyaem/cryptoboom.git"
+    "url": "git+https://github.com/MorePositive/CryptoGrowth.git"
   },
   "engines": {
     "node": "16.14.0"

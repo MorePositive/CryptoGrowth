@@ -6,7 +6,8 @@ const PERIODS = {
     hourly: '3600'
 }
 
-exports.getOHLC = (coin, after, before, period, exchange = 'kraken', ref) => {
+exports.getOHLC = (coin, after, before, period, exchange, ref) => {
+    exchange = exchange || 'kraken';
     let url = `https://api.cryptowat.ch/markets/${exchange}/${coin}usd/ohlc?periods=${PERIODS[period]}`;
     if(after) url += '&after=' + after;
     if(before) url += '&before=' + before;

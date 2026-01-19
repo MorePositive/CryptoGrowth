@@ -3,6 +3,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { isClient, priceFormat, dateFormat, dateShortFormat } from '../../helpers';
 import { getInfo } from '../../api/coingecko';
+import { getOHLC } from '../../api/cryptowatch';
 import './timeline.scss';
 
 const Timeline = (props) => {
@@ -10,12 +11,58 @@ const Timeline = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
-  const [coinValue, setCoinValue] = useState(searchParams.get('coin'));
   const [coinInfo, setCoinInfo] = useState(null);
   const [amountValue, setAmountValue] = useState(searchParams.get('amount'));
   const [fromValue, setFromValue] = useState(searchParams.get('from'));
   const [ohlc, setOHLC] = useState(null);
   const [graph, setGraph] = useState(null);
+  const [stat, setStat] = useState(null);
+  const coinValue = searchParams.get('coin');
+
+  const updateCharts = (fields, coin) => {
+    coin = coin || coinInfo;
+    if(!coin) return;
+    setLoading(true);
+
+    if(fields?.from) setFromValue(fields.from);
+    if(fields?.amount) setAmountValue(fields.amount);
+
+    let from = Math.round(new Date(fromValue).getTime() / 1000);
+    let before = Math.round(Date.now() / 1000);
+    Promise.allSettled([
+      getOHLC(coin.symbol, from, before, 'kraken')
+    ]).then(results => {
+      let coinData = results[0].value;
+
+      if (coinData.error && !coinData.result) {
+        setError({
+          message: `Cannot load historical information for coin ${coin.name} (symbol ${coin.symbol}). Please check your spelling or try selecting different date`
+        });
+      } else {
+        let ohlc = coinData.result['604800_Monday'];
+        let coinGraph = [];
+        let own = amountValue / ohlc[0][1];
+        let highest = [ohlc[0][1]], lowest = [ohlc[0][1]];
+
+        let date, cost;
+        for(let i=0; i<ohlc.length; i++) {
+          date = new Date(ohlc[i][0] * 1000);
+          cost = own * ohlc[i][4];
+          if (cost > highest[0]) highest = [ cost, date ];
+          if (cost < lowest[0]) lowest = [ cost, date ];
+          ohlc[i] = { x: date, y: ohlc[i].slice(1, 5) };
+          coinGraph.push({ x: date, y: cost });
+        }
+
+        setOHLC(ohlc);
+        setGraph([{ data: coinGraph }]);
+        setStat({ highest, lowest });
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
+    });
+  };
 
   useEffect(() => {
     getInfo(coinValue, (data) => {
@@ -25,40 +72,16 @@ const Timeline = (props) => {
         });
       } else {
         setCoinInfo(data);
-
-        let from = Math.round(new Date(fromValue).getTime() / 1000);
-        let before = Math.round(Date.now() / 1000);
-        fetch(`/api/ohlc/${data.symbol}/${from}/${before}/weekly`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.error && !data.result) {
-              setError({
-                message: `Cannot load historical information for coin ${coinValue} (symbol ${data.symbol}). Please check your spelling or try selecting different date`
-              });
-            } else {
-              let ohlc = data.result['604800_Monday'];
-              let graph = [];
-              let own = amountValue / ohlc[0][1];
-              for(let i=0; i<ohlc.length; i++) {
-                ohlc[i] = { x: new Date(ohlc[i][0] * 1000), y: ohlc[i].slice(1, 5) };
-                graph.push({ x: ohlc[i].x, y: own * ohlc[i].y[3] });
-              }
-              setOHLC(ohlc);
-              setGraph(graph);
-              setTimeout(() => {
-                setLoading(false);
-              }, 1000);
-            }
-          });
+        updateCharts(null, data);
       }
     });
-  }, []);
+  }, [ coinValue ]);
 
   const lineOptions = {
     type: 'line',
     height: 350,
-    series: [{ data:graph }],
-    colors: [ '#645FF2' ],
+    series: graph,
+    colors: [ '#645FF2', '#38BDD1' ],
     chart: {
       animations: { enabled: false },
       toolbar: { show: false },
@@ -73,7 +96,7 @@ const Timeline = (props) => {
       y: {
         formatter: (val) => priceFormat.format(val),
         title: {
-          formatter: () => 'Price'
+          formatter: () => 'Cost'
         }
       },
       marker: {
@@ -98,7 +121,7 @@ const Timeline = (props) => {
 
   const ohlcOptions = {
     type: 'candlestick',
-    height: 350,
+    height: 200,
     series: [{ data:ohlc }],
     chart: {
       toolbar: {
@@ -146,7 +169,29 @@ const Timeline = (props) => {
   return (
     <Container>
       <Row>
-        <Col><h2>Investment: ${amountValue} worth of {coinValue} on {fromValue}</h2></Col>
+        <Col className="investment">
+          <h2>Investment:</h2>
+            {coinInfo &&
+              <span>
+                <img src={coinInfo.image?.thumb} alt={coinInfo.name} width="18px" />
+                <b>{coinInfo.name}</b> (symbol: {coinInfo.symbol.toUpperCase()}) on
+              </span>
+            }
+          <input 
+            type="date"
+            value={fromValue}
+            className="from"
+            onChange={(e) => updateCharts({ from:e.target.value })} 
+          />
+          <span>in amount of $</span>
+          <input 
+            type="text"
+            value={amountValue}
+            className="amount"
+            size="7"
+            onChange={(e) => updateCharts({ amount:e.target.value })} 
+          />
+        </Col>
       </Row>
       {error && <div>{error.message}</div>}
       <Row>
@@ -179,16 +224,42 @@ const Timeline = (props) => {
         </Col>
         <Col>
           <Card className="block">
-            <Card.Body className="block-info">
-          The lowest return occured on 05-25-2020 at -50%
-          The highest return occured on 05-26-2020 at 500%
+            <Card.Body className="block-returns">
+              {coinInfo && stat && 
+                <>
+                  <h4>Your possible returns:</h4>
+                  <p>The highest return would've occured on <b>{dateFormat.format(stat.highest[1])}</b> at the price of <b>{priceFormat.format(stat.highest[0])}</b></p>
+                  <p>The lowest return would've occured on <b>{dateFormat.format(stat.lowest[1])}</b> at the price of <b>{priceFormat.format(stat.lowest[0])}</b></p>
+                  <hr/>
+                  <h4>{coinInfo.name} historic price:</h4>
+                  <p>All time high was <b>{priceFormat.format(coinInfo.market_data.ath.usd)}</b> on {dateFormat.format(new Date(coinInfo.market_data.ath_date.usd))}</p>
+                  <p>All time low was <b>{priceFormat.format(coinInfo.market_data.atl.usd)}</b> on {dateFormat.format(new Date(coinInfo.market_data.atl_date.usd))}</p>
+                </>
+              }
             </Card.Body>
           </Card>
         </Col>
       </Row>
       <Row>
-        <Col>If you have build your portfolio out of top 5 coins, your return for same period of time would be 200%</Col>
-        <Col>Some other useless metrics</Col>
+        <Col>
+          <Card className="block">
+            <Card.Body className="block-info">
+              <base target="_blank" rel="noreferrer" />
+              {coinInfo && 
+                <>
+                  <p dangerouslySetInnerHTML={{ __html:coinInfo.description.en}}></p>
+                  <p>It was created on {dateFormat.format(new Date(coinInfo.genesis_date))} and it's homepage is <a href={coinInfo.links.homepage[0]} target="_blank" rel="noreferrer">{coinInfo.links.homepage[0]}</a></p>
+                  <p>It has community score of {coinInfo.community_score.toFixed(2)} and has this presence ion social media:</p>
+                  <ul>
+                    <li>Telegram users: {coinInfo.community_data.telegram_channel_user_count || 'unknown'}</li>
+                    <li>Reddit subscribers: {coinInfo.community_data.reddit_subscribers || 'unknown'}</li>
+                    <li>Twitter followers: {coinInfo.community_data.twitter_followers || 'unknown'}</li>
+                  </ul>
+                </>
+              }
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
     </Container>
   );

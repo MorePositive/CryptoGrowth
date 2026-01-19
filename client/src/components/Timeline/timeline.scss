@@ -17,6 +17,37 @@
     }
 }
 
-.block-line .loading {
-    //height: 300px;
+.block-ohlc .loading {
+    height: 200px;
+}
+
+.investment {
+    margin: 1rem 0;
+    font-size: 18px;
+
+    img {
+        margin: 0 4px;
+    }
+
+    input {
+        border-radius: 4px;
+        border-color: transparent;
+        transition: all ease 0.2s;
+        padding: 2px 6px;
+        margin: 0 2px;
+        font-weight: bold;
+        outline: none !important;
+
+        &.from {
+            width: 130px;
+        }
+
+        &:hover, &:focus, &:active {
+            border-color: #645FF2;
+        }
+    }
+}
+
+.block-info {
+    text-align: left;
 }

@@ -21,11 +21,14 @@ export const priceFormat = new Intl.NumberFormat('en-US', {
   currency: 'USD'
 });
 
-export const dateFormat = new Intl.DateTimeFormat('en-US', {
+export const dateWeekdayFormat = new Intl.DateTimeFormat('en-US', {
   dateStyle: 'full'
-});
+}); // Monday, June 1, 2022
 
 export const dateShortFormat = new Intl.DateTimeFormat({
   dateStyle: 'short'
-});
+}); // 06/01/2022
 
+export const dateFormat = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric'
+}); // June 1, 2022

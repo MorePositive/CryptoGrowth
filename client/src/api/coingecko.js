@@ -3,9 +3,9 @@ const api = (path, cb) => {
       .then((res) => res.json())
       .then((data) => cb(data),
       err => {
-          console.log('well it\'s failed. show a message or something', err);
+          console.log('CG API has failed', err);
       });
-}
+};
 
 export const getInfo = (coin, cb) => api(`/coins/${coin}?localization=false`, cb);
 export const getCoins = (cb) => api('/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false', cb);

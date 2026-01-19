@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
-import { dateFormat } from '../../helpers';
+import { dateWeekdayFormat } from '../../helpers';
 import './headlines.scss';
 
 const Headlines = () => {
@@ -20,7 +20,7 @@ const Headlines = () => {
         {data ? data.map((article, i) => {
           return <div key={i} className="item" style={{ backgroundImage:`url(${article.urlToImage})` }}>
             <a href={article.url} target="_blank" rel="noreferrer" className="title">{article.title}</a>
-            <div className="date">{dateFormat.format(new Date(article.publishedAt))}</div>
+            <div className="date">{dateWeekdayFormat.format(new Date(article.publishedAt))}</div>
             <div className="description">{article.description}</div>
           </div>;
         }) : 'no data available'}

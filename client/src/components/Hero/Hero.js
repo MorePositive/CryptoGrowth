@@ -49,7 +49,7 @@ const Hero = ({ coins, value }) => {
 
   useEffect(() => {
     setCoinValue(value);
-  }, [value])
+  }, [value]);
   
   const onSearch = (input, cb) => {
     fetch('/api/search/' + input.trim())
@@ -112,11 +112,10 @@ const Hero = ({ coins, value }) => {
         <Col className="field">
           <div className="input">
             <input 
-              type="text" 
-              value={amountValue} 
-              href="#amount" 
-              className="amount" 
-              onChange={(e) => setAmountValue(e.target.value)} 
+              type="text"
+              value={amountValue}
+              className="amount"
+              onChange={(e) => setAmountValue(e.target.value)}
             />
           </div>
         </Col>
@@ -129,11 +128,10 @@ const Hero = ({ coins, value }) => {
         <Col className="label">From date: </Col>
         <Col className="field">
           <input 
-            type="date" 
-            value={dateValue} 
-            href="#date" 
-            className="date" 
-            onChange={(e) => setDateValue(e.target.value)} 
+            type="date"
+            value={dateValue}
+            className="date"
+            onChange={(e) => setDateValue(e.target.value)}
           />
         </Col>
       </div>

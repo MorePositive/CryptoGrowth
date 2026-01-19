@@ -28,8 +28,8 @@ app.get('/api/search/:term', (req, res) => {
 });
 
 const api = require('./provider/cryptowatch');
-app.get('/api/ohlc/:coin/:after/:before/:period', (req, res) => {
-    api.getOHLC(req.params.coin, req.params.after, req.params.before, req.params.period, undefined, res);
+app.get('/api/ohlc/:coin/:after/:before/:period/:exchange', (req, res) => {
+    api.getOHLC(req.params.coin, req.params.after, req.params.before, req.params.period, req.params.exchange, res);
 });
 
 const indexFile = fs.readFileSync(path.resolve(BUILD_DIR, 'index.html'), 'utf-8');

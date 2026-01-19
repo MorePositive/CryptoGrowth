@@ -148,10 +148,14 @@ export const Main = ({ coins, loader }) => {
   const renderResults = () => {
     var missedAmount, percentIncrease;
     if(pastData) {
-      const currentPrice = coins.find(({ id }) => id === coinValue).current_price;
-      const pastPrice = pastData.market_data.current_price.usd;
-      missedAmount = Number(amountValue) / pastPrice * currentPrice;
-      percentIncrease = missedAmount / amountValue * 100;
+      try {
+        const currentPrice = coins.find(({ id }) => id === coinValue).current_price;
+        const pastPrice = pastData.market_data.current_price.usd;
+        missedAmount = Number(amountValue) / pastPrice * currentPrice;
+        percentIncrease = missedAmount / amountValue * 100;
+      } catch (err) {
+        console.log(err);
+      }
     }
     return (
       <div className="result">
@@ -159,7 +163,9 @@ export const Main = ({ coins, loader }) => {
         <div className="missed">{ missedAmount
         ? priceFormat.format(missedAmount)
         : "calculating result..." }</div>
-        <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
+        { percentIncrease &&
+          <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
+        }
       </div>
     )
   }

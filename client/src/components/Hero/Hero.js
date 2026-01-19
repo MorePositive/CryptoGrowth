@@ -3,6 +3,7 @@ import Select from 'react-select/async';
 import { Steps } from 'rsuite';
 import { priceFormat } from '../../helpers';
 import { Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { getHistorical } from '../../api/coingecko';
 import './hero.scss';
 
@@ -201,8 +202,11 @@ const Hero = ({ coins }) => {
       </Steps>
       { renderStep() }
       { step < 3
-      ? <Button onClick={nextStep}>{step < 2 ? 'Next' : 'Submit'}</Button>
-      : <Button onClick={startOver}>Start over</Button> }
+      ? <Button className="submit arrowed" onClick={nextStep}>{step < 2 ? 'Next' : 'Submit'}</Button>
+      : <>
+          <Button onClick={startOver}>Start over</Button>
+          <Link className="btn btn-secondary breakdown arrowed" to={{ pathname: '/timeline', search: `?coin=${coinValue.id}&from=${dateValue}&amount=${amountValue}` }}>Breakdown chart</Link>
+        </> }
     </div>
   );
 };

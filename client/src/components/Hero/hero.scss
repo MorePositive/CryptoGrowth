@@ -29,6 +29,10 @@
         margin-top: 2rem;
     }
 
+    ::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+
     div.amount {
         margin-top: 2rem;
         .field div {
@@ -72,8 +76,38 @@
         }
     }
 
-    button {
+    .btn {
         margin-top: 1rem;
+        text-transform: uppercase;
+        color: #fff;
+        text-decoration: none !important;
+
+        &:hover, &:focus {
+            color: #fff;
+        }
+
+        &.arrowed {
+            &::after {
+                content: ">";
+                font-family: monospace;
+                line-height: 13px;
+                text-align: right;
+                display: inline-block;
+                width: 0;
+                overflow: hidden;
+                transition: all ease 0.2s;
+            }
+            &:hover::after {
+                width: 15px;
+            }
+        }
+
+        &.breakdown {
+            margin-left: 10px;
+            &::after {
+                width: 15px;
+            }
+        }
     }
 
     .rs-steps {

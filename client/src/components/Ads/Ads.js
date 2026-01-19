@@ -11,9 +11,9 @@ const Ads = () => {
   }, []);
 
   return (data ?
-    <Col xs="4">
-      <Card className="block-ads">
-          <Card.Body>{data}</Card.Body>
+    <Col>
+      <Card className="block">
+          <Card.Body className="block-ads">{data}</Card.Body>
       </Card>
     </Col>
   : '');

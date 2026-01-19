@@ -1,0 +1,11 @@
+.block-heatmap {
+    .apexcharts-tooltip-y-group {
+        padding: 6px 0 5px;
+        display: flex;
+        flex-direction: column;
+    }
+    .apexcharts-tooltip-text-y-value {
+        font-weight: normal;
+        margin: 0;
+    }
+}

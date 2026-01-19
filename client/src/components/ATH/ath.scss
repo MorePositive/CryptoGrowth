@@ -1,4 +1,4 @@
-.block-trends {
+.block-ath {
     .symbol {
         text-align: right;
         text-transform: uppercase;
@@ -9,22 +9,9 @@
     .name {
         text-align: left;
     }
-    .marketCap {
-        text-align: right;
+    .price {
         span {
-            font-weight: bold;
-            &::before {
-                content: '#';
-                font-weight: normal;
-                padding-right: 3px;
-            }
-            &::after {
-                content: 'in market cap';
-                font-weight: normal;
-                font-size: 11px;
-                padding-left: 5px;
-                padding-right: 5px;
-            }
+            font-size: 12px;
         }
     }
 

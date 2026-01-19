@@ -1,8 +1,14 @@
 @import '../../theme';
 
-.headlines {
+@include media-breakpoint-up(sm) {
+    .block-headlines {
+        grid-template-columns: 50% 50% !important;
+    }
+}
+
+.block-headlines {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 100%;
     grid-gap: 10px;
 
     .item {

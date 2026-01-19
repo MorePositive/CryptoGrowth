@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
 import { getCoins, getHistorical, getRates, getTrends } from '../../api/coingecko';
@@ -11,6 +11,8 @@ import TopCoins from '../TopCoins/TopCoins';
 import Trends from '../Trends/Trends';
 import Ads from '../Ads/Ads';
 import Headlines from '../Headlines/Headlines';
+import ATH from '../ATH/ATH';
+import Heatmap from '../Heatmap/Heatmap';
 
 const customStyles = {
   control: (styles) => ({
@@ -60,6 +62,10 @@ const Main = ({ loader }) => {
     currency: 'USD'
   });
 
+  const setLoading = (state) => {
+    loader(state);
+  };
+
   useEffect(() => {
     Promise.all([
       getRates(data => setRates(data.rates)),
@@ -69,10 +75,6 @@ const Main = ({ loader }) => {
       setLoading(false);
     });
   }, []);
-
-  const setLoading = (state) => {
-    loader(state);
-  };
 
   const onSearch = (input, cb) => {
     fetch('/api/search/' + input.trim())
@@ -219,16 +221,12 @@ const Main = ({ loader }) => {
     setStep(0);
   }
 
-  const sortToATH = (data) => {
-    return [...data].sort((a, b) => b.atl_change_percentage - a.atl_change_percentage);
-  }
-
   return (
     <>
-      <main className="highlight">
+      <main className="hero">
         <Container>
-          <Row className="justify-content-md-center">
-            <Col xs={{ span: 4, offset: 1 }} className="start-form">
+          <Row>
+            <Col lg={{ span: 5, offset: 1 }} className="start-form">
               <Steps current={step}>
                 <Steps.Item title="Choose asset" />
                 <Steps.Item title="Investment" />
@@ -239,7 +237,7 @@ const Main = ({ loader }) => {
                 ? <Button onClick={nextStep}>{step < 2 ? 'Next' : 'Submit'}</Button>
                 : <Button onClick={startOver}>Start over</Button> }
             </Col>
-            <Col xs={{ span: 4, offset: 1 }}>
+            <Col lg={{ span: 4, offset: 1 }}>
               <TopCoins coins={coins} />
             </Col>
           </Row>
@@ -248,40 +246,21 @@ const Main = ({ loader }) => {
       <Container>
         <Row>
           <Col>
-            <Trends
-              data={sortToATH(coins).slice(0, 10)}
-              title="All Time Top Gainers"
-              toATH={true}
-            />
+            <ATH data={coins} />
           </Col>
-          <Col xs>
-            <Ads />
-          </Col>
+          <Ads />
         </Row>
         <Row>
-          <Col xs>
-            <Trends
-              data={coins.slice(0, 10)}
-              title="Capitalization of top 10 assets"
-            />
+          <Col>
+            <Heatmap data={coins.slice(0, 30)} />
           </Col>
-          <Col xs>
-            <Trends 
-              data={trends}
-              rates={rates} 
-              title="Trending coins" 
-              isTrends={true} 
-            />
+          <Col>
+            <Trends data={trends} rates={rates} />
           </Col>
         </Row>
         <Row>
           <Col>
-            <Card>
-              <Card.Title>Latest headlines</Card.Title>
-              <Card.Body>
-                <Headlines />
-              </Card.Body>
-            </Card>
+            <Headlines />
           </Col>
         </Row>
       </Container>

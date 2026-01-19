@@ -1,9 +1,8 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import { convertToBillions } from '../../helpers';
 import './trends.scss';
 
-const Trends = ({ data, rates, title, isTrends, toATH }) => {
+const Trends = ({ data, rates }) => {
 
   const formatNumber = (num) => num.toLocaleString(undefined, { minimumFractionDigits: 3 });
   const getPrice = (price_btc) => {
@@ -14,29 +13,26 @@ const Trends = ({ data, rates, title, isTrends, toATH }) => {
 
   const generateTable = (data = []) => {
     return (
-      <Card className="block-trends">
-        <Card.Title>{title}</Card.Title>
-        <Card.Body>
-            <table width="100%"><tbody>
-              {data.map((coin, i) => {
-                  return <tr key={i}>
-                    <td className="symbol">{isTrends ? coin.item.symbol : coin.symbol}</td>
-                    <td><img src={isTrends ? coin.item.thumb : coin.image} alt="crypto asset logo" /></td>
-                    <td className="name">{isTrends ? coin.item.name : coin.name}</td>
-                    <td>{isTrends ? 
-                      getPrice(coin.item.price_btc) : toATH ? 
-                      `${(coin.atl_change_percentage).toFixed(2)}%` : 
-                      convertToBillions(coin.market_cap)}
-                    </td>
-                  </tr>;
-              })}
-            </tbody></table>
+      <Card className="block">
+        <Card.Title>Trending coins</Card.Title>
+        <Card.Body className="block-trends">
+          <table width="100%"><tbody>
+            {data.map((coin, i) => {
+              return <tr key={i}>
+                <td className="symbol">{coin.item.symbol}</td>
+                <td><img src={coin.item.thumb} alt={coin.item.symbol} /></td>
+                <td className="name">{coin.item.name}</td>
+                <td>{getPrice(coin.item.price_btc)}</td>
+                <td className="marketCap"><span>{coin.item.market_cap_rank}</span></td>
+              </tr>
+            })}
+          </tbody></table>
         </Card.Body>
       </Card>
     )
   };
 
-  return data && generateTable(data);
+  return data ? generateTable(data) : 'no data yet';
 };
 
 export default Trends;

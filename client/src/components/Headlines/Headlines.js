@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { Card } from 'react-bootstrap';
 import './headlines.scss';
 
 const Headlines = () => {
@@ -17,15 +18,18 @@ const Headlines = () => {
   });
 
   return (
-    <div className="block headlines">
-      {data ? data.map((article, i) => {
-        return <div key={i} className="item" style={{ backgroundImage:`url(${article.urlToImage})` }}>
-          <a href={article.url} target="_blank" className="title">{article.title}</a>
-          <div className="date">{dateFormat.format(new Date(article.publishedAt))}</div>
-          <div className="description">{article.description}</div>
-        </div>;
-      }) : 'no data available'}
-    </div>
+    <Card className="block">
+      <Card.Title>Latest Headlines</Card.Title>
+      <Card.Body className="block-headlines">
+        {data ? data.map((article, i) => {
+          return <div key={i} className="item" style={{ backgroundImage:`url(${article.urlToImage})` }}>
+            <a href={article.url} target="_blank" rel="noreferrer" className="title">{article.title}</a>
+            <div className="date">{dateFormat.format(new Date(article.publishedAt))}</div>
+            <div className="description">{article.description}</div>
+          </div>;
+        }) : 'no data available'}
+      </Card.Body>
+    </Card>
   )
 };
 

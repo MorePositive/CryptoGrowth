@@ -1,0 +1,48 @@
+@import "theme";
+
+.App {
+  text-align: center;
+}
+
+.highlight {
+  background: $highlight-bg;
+  color: #fff;
+  margin: 1rem 0;
+
+  .block {
+    margin-top: 1rem;
+    background: $block-bg;
+    border-radius: 3px;
+    box-shadow: 0px 0px 0px 1px rgb(0 0 0 / 2%), 0px 2px 8px rgb(0 0 0 / 8%);
+    padding: 1rem;
+  }
+
+  .block-search {
+    a.date {
+      color: $subtle-link;
+      text-decoration: none;
+      border-bottom: 1px dashed $subtle-link;
+    }
+
+    input {
+      margin-top: 1rem;
+    }
+  }
+
+  .block-top {
+    table {
+      width: 100%;
+    }
+  }
+}
+
+.container .card {
+  margin: 1rem;
+}
+
+footer {
+  background: #f6f8f9;
+  border-top: 1px solid #ddd;
+  margin-top: 3rem;
+  padding: 2rem 0;
+}

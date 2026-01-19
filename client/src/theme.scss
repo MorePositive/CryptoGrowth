@@ -1,0 +1,10 @@
+$theme-colors: (
+    "info": tomato,
+    "danger": teal
+);
+
+$highlight-bg: #003366;
+$block-bg: #004080;
+$subtle-link: #3187dd;
+
+@import "~bootstrap/scss/bootstrap";

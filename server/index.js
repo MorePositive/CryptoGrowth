@@ -1,5 +1,6 @@
 const fs = require('fs');
 const https = require('https');
+const http = require('http');
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -67,8 +68,18 @@ const startServer = () => {
     }
 
     https.createServer(options, app).listen(PORT, () => {
-        console.log(`Server listening on ${PORT}`);
+        console.log('Server listening on', PORT);
     });
+    
+    if(PORT !== 80) {
+        http.createServer((req, res) => {
+            res.writeHead(301, { 'Location': 'https://' + req.headers['host'] + req.url });
+            res.end();
+        }).listen(80, () => {
+            console.log('Redirect server for HTTP started.');
+        });
+    }
+
     return true;
 };
 

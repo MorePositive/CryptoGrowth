@@ -12,7 +12,7 @@ const TopCoins = ({ coins }) => {
             <td className="symbol">{coin.symbol}</td>
             <td><img className="coin-img" src={coin.image} alt={coin.id}/></td>
             <td className="name">{ coin.name }</td>
-            <td>{ coin.current_price }$</td>
+            <td>${ coin.current_price }</td>
           </tr>
         )) }
       </tbody></table>

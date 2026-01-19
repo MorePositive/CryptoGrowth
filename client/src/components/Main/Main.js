@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
-import { getCoins, getHistorical, getRates } from '../../api/coingecko';
+import { getCoins, getHistorical, getRates, getTrends } from '../../api/coingecko';
 import './main.scss';
 
 // Components
@@ -47,6 +47,7 @@ const Main = ({ loader }) => {
 
   const [coins, setCoins] = useState([]);
   const [rates, setRates] = useState(null);
+  const [trends, setTrends] = useState(null);
 
   const [coinValue, setCoinValue] = useState('');
   const [amountValue, setAmountValue] = useState(1000);
@@ -61,8 +62,9 @@ const Main = ({ loader }) => {
 
   useEffect(() => {
     Promise.all([
-      getRates((data) => setRates(data.rates)),
+      getRates(data => setRates(data.rates)),
       getCoins(data => setCoins(data)),
+      getTrends(data => setTrends(data.coins.slice(0, 10)))
     ]).then(() => {
       setLoading(false);
     });
@@ -163,12 +165,14 @@ const Main = ({ loader }) => {
   const renderResults = () => {
     let missedAmount;
     let percentIncrease;
+    let isProfitableInvestment;
     if (pastData) {
       try {
         const currentPrice = coins.find(({ id }) => id === coinValue).current_price;
         const pastPrice = pastData.market_data.current_price.usd;
         missedAmount = Number(amountValue) / pastPrice * currentPrice;
         percentIncrease = missedAmount / amountValue * 100;
+        isProfitableInvestment = percentIncrease > 100;
       } catch (err) {
         console.log(err);
       }
@@ -179,10 +183,11 @@ const Main = ({ loader }) => {
         <div className="missed">
           { missedAmount ? priceFormat.format(missedAmount) : "calculating result..." }
         </div>
-        { percentIncrease &&
-          <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
+        { percentIncrease && isProfitableInvestment
+          ? <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
+          : <p className="mt-2">That is a -{(100 - percentIncrease).toFixed(2)}% loss on your initial investment!</p>
         }
-        { missedAmount &&
+        { missedAmount && isProfitableInvestment &&
           <div className="animation">
             <div className="firework"><i></i></div>
             <div className="firework one"><i></i></div>
@@ -214,6 +219,10 @@ const Main = ({ loader }) => {
     setStep(0);
   }
 
+  const sortToATH = (data) => {
+    return [...data].sort((a, b) => b.atl_change_percentage - a.atl_change_percentage);
+  }
+
   return (
     <>
       <main className="highlight">
@@ -239,18 +248,30 @@ const Main = ({ loader }) => {
       <Container>
         <Row>
           <Col>
-            <Card>
-              <Card.Body>Some graphics? i.e. comparison of S&P with total crypto market</Card.Body>
-            </Card>
+            <Trends
+              data={sortToATH(coins).slice(0, 10)}
+              title="All Time Top Gainers"
+              toATH={true}
+            />
           </Col>
-          <Ads />
+          <Col xs>
+            <Ads />
+          </Col>
         </Row>
         <Row>
-          <Col xs="6">
-            <Card><Card.Body>Capitalization of top 10 assets?</Card.Body></Card>
+          <Col xs>
+            <Trends
+              data={coins.slice(0, 10)}
+              title="Capitalization of top 10 assets"
+            />
           </Col>
-          <Col xs="6">
-            <Trends rates={rates} />
+          <Col xs>
+            <Trends 
+              data={trends}
+              rates={rates} 
+              title="Trending coins" 
+              isTrends={true} 
+            />
           </Col>
         </Row>
         <Row>

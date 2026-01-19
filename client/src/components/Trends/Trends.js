@@ -1,14 +1,9 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
-import { getTrends } from '../../api/coingecko';
+import { convertToBillions } from '../../helpers';
 import './trends.scss';
 
-const Trends = ({ rates }) => {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    getTrends((data) => setData(data.coins));
-  }, []);
+const Trends = ({ data, rates, title, isTrends, toATH }) => {
 
   const formatNumber = (num) => num.toLocaleString(undefined, { minimumFractionDigits: 3 });
   const getPrice = (price_btc) => {
@@ -17,26 +12,31 @@ const Trends = ({ rates }) => {
       : formatNumber(price_btc) + ' BTC'
   }
 
-  return (
-    data ? (
+  const generateTable = (data = []) => {
+    return (
       <Card className="block-trends">
-        <Card.Title>Trending coins</Card.Title>
+        <Card.Title>{title}</Card.Title>
         <Card.Body>
             <table width="100%"><tbody>
               {data.map((coin, i) => {
-                  if(i>10) return null;
                   return <tr key={i}>
-                    <td className="symbol">{coin.item.symbol}</td>
-                    <td><img src={coin.item.thumb} alt="" /></td>
-                    <td className="name">{coin.item.name}</td>
-                    <td>{getPrice(coin.item.price_btc)}</td>
+                    <td className="symbol">{isTrends ? coin.item.symbol : coin.symbol}</td>
+                    <td><img src={isTrends ? coin.item.thumb : coin.image} alt="crypto asset logo" /></td>
+                    <td className="name">{isTrends ? coin.item.name : coin.name}</td>
+                    <td>{isTrends ? 
+                      getPrice(coin.item.price_btc) : toATH ? 
+                      `${(coin.atl_change_percentage).toFixed(2)}%` : 
+                      convertToBillions(coin.market_cap)}
+                    </td>
                   </tr>;
               })}
             </tbody></table>
         </Card.Body>
       </Card>
-    ) : ''
-  )
+    )
+  };
+
+  return data && generateTable(data);
 };
 
 export default Trends;

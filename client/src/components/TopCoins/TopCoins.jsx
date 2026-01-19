@@ -10,8 +10,6 @@ export const TopCoins = () => {
         <tr><td><img src="" alt=""/>Ethereum</td><td>800%</td></tr>
         <tr><td><img src="" alt=""/>Bitcoin</td><td>500%</td></tr>
         <tr><td><img src="" alt=""/>Ethereum</td><td>800%</td></tr>
-        <tr><td><img src="" alt=""/>Bitcoin</td><td>500%</td></tr>
-        <tr><td><img src="" alt=""/>Ethereum</td><td>800%</td></tr>
       </tbody></table>
     </div>
   )

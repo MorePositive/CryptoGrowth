@@ -23,6 +23,7 @@ export const Trends = ({ rates }) => {
         <Card.Body>
             <table width="100%"><tbody>
               {data.map((coin, i) => {
+                  if(i>10) return null;
                   return <tr key={i}>
                     <td className="symbol">{coin.item.symbol}</td>
                     <td><img src={coin.item.thumb} alt=""/></td>

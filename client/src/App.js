@@ -24,12 +24,12 @@ function App() {
       <Main />
       <Container>
         <Row>
-          <Col xs="8">
+          <Col>
             <Card>
               <Card.Body>Some graphics? i.e. comparison of S&P with total crypto market</Card.Body>
             </Card>
           </Col>
-          <Col xs="4"><Ads /></Col>
+          <Ads />
         </Row>
         <Row>
           <Col xs="6">

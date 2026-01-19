@@ -1,5 +1,5 @@
 const HEADING = {
-  TITLE: 'Cryptosomething',
+  TITLE: 'Cryptogrowth',
   DESCRIPTION: 'Check out how much did you miss on crypto!'
 };
 

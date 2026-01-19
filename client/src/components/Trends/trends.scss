@@ -13,9 +13,13 @@
     table {
         tr td {
             padding: 0.5rem 0;
+            cursor: default;
         }
         tr:nth-child(odd) {
             background: #f8f8f8;
+        }
+        tr:hover {
+            background: #eee;
         }
     }
 }

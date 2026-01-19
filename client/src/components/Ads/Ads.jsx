@@ -1,18 +1,19 @@
-import { Card } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Card, Col } from 'react-bootstrap';
 
 export const Ads = () => {
-  /*const [data, setData] = useState(null);
+  const [data, setData] = useState(null);
   useEffect(() => {
-    fetch('https://api.coingecko.com/api/v3/search/trending')
-      .then((res) => res.json())
-      .then((data) => setData(data.coins));
-  }, []);*/
+    setTimeout(() => {
+      setData('Ads displayed here');
+    }, 2000);
+  }, []);
 
-  return (
-    <Card className="block-ads">
-        <Card.Body>
-            Ads block
-        </Card.Body>
-    </Card>
-  )
+  return (data ?
+    <Col xs="4">
+      <Card className="block-ads">
+          <Card.Body>{data}</Card.Body>
+      </Card>
+    </Col>
+  : '')
 };

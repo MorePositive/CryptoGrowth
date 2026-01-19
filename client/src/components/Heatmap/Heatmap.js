@@ -88,7 +88,9 @@ const Heatmap = ({ data }) => {
     <Card className="block">
         <Card.Title>Market Capitalization (top {data.length})</Card.Title>
         <Card.Body className="block-heatmap">
-            <ApexChart options={options} series={options.series} type="treemap" height={290} />
+            { data
+            ? <ApexChart options={options} series={options.series} type="treemap" height={290} />
+            : 'no data yet' }
         </Card.Body>
     </Card>
   );

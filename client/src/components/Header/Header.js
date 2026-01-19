@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { HEADING } from '../../constants/header';
 import { Container, Row, Col } from 'react-bootstrap';
 import './header.scss';
@@ -8,14 +9,18 @@ const Header = () => {
     <header className="header">
       <Container>
         <Row>
-          <Col xs={{ span: 4, offset: 2 }}>
-            <a href="/">
-              <div className="logo"></div>
+          <Col xs={{ span: 4, offset: 2 }} className="align-self-center">
+            <Link to="/" className="logo">
+              <div className="icon"></div>
               <h1 className="header_title">{ HEADING.TITLE }</h1>
-            </a>
+            </Link>
           </Col>
-          <Col xs={4}>
-            <p className="header_description">{ HEADING.DESCRIPTION }</p>
+          <Col xs={4} className="row">
+            <div className="col header_description">{ HEADING.DESCRIPTION }</div>
+            <ul className="col menu">
+              <li><Link to="/about">About</Link></li>
+              <li><Link to="/support">Support</Link></li>
+            </ul>
           </Col>
         </Row>
       </Container>

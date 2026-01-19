@@ -26,7 +26,8 @@
     "sass": "^1.51.0"
   },
   "scripts": {
-    "start": "node server/index.js",
+    "server": "node server/index.js",
+    "client": "cd client && npm run start",
     "build": "cd client && npm run build",
     "daily-job": "node server/jobs/daily.js",
     "test": "echo \"Error: no test specified\" && exit 1"

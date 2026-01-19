@@ -3,16 +3,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 0.5rem;
+  padding: 1rem 0;
 
-  a {
-    text-decoration: none;
+  .logo {
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
 
-    * {
-      margin-top: 10px;
-    }
-
-    .logo {
+    .icon {
       mask-image: url('../../../public/logo.svg');
       mask-repeat: no-repeat;
       float: left;
@@ -25,11 +23,38 @@
     h1 {
       text-decoration: none;
       text-align: left;
+      text-transform: uppercase;
+      font-size: 34px;
+      margin: 0;
+      padding: 0;
     }
   }
 
   .header_description {
-    padding-top: 1.8rem;
+    padding: 0;
+    margin: 0;
     text-align: left;
+    align-self: center;
+  }
+}
+
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+
+  a {
+    background: rgb(100, 95, 242, 0.2);
+    color: #000;
+    padding: 2px 6px;
+    display: inline-block;
+    margin: 2px;
+    text-decoration: none !important;
+
+    &:hover {
+      background: #38BDD1;
+      color: #fff;
+    }
   }
 }

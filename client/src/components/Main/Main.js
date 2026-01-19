@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
 import { getCoins, getHistorical, getRates, getTrends } from '../../api/coingecko';
+import { isClient } from '../../helpers';
 import './main.scss';
 
 // Components
 import TopCoins from '../TopCoins/TopCoins';
 import Trends from '../Trends/Trends';
-import Ads from '../Ads/Ads';
-import Headlines from '../Headlines/Headlines';
 import ATH from '../ATH/ATH';
-import Heatmap from '../Heatmap/Heatmap';
+import Headlines from '../Headlines/Headlines';
 
 const customStyles = {
   control: (styles) => ({
@@ -51,7 +50,7 @@ const Main = ({ loader }) => {
   const [rates, setRates] = useState(null);
   const [trends, setTrends] = useState(null);
 
-  const [coinValue, setCoinValue] = useState('');
+  const [coinValue, setCoinValue] = useState(null);
   const [amountValue, setAmountValue] = useState(1000);
   const [dateValue, setDateValue] = useState(oldDate.toLocaleDateString('en-CA'));
   const [pastData, setPastData] = useState(null);
@@ -116,9 +115,10 @@ const Main = ({ loader }) => {
       <div className="search">
         <Col className="label">Choose crypto asset: </Col>
         <Select
+          value={coinValue?.id}
           styles={customStyles}
           isSearchable={true}
-          onChange={e => setCoinValue(e.value)}
+          onChange={e => setCoinValue(coins.find(({ id }) => id === e.value))}
           loadOptions={onSearch}
           loadingMessage={loadingMessage}
           noOptionsMessage={noOptions}
@@ -170,7 +170,7 @@ const Main = ({ loader }) => {
     let isProfitableInvestment;
     if (pastData) {
       try {
-        const currentPrice = coins.find(({ id }) => id === coinValue).current_price;
+        const currentPrice = coinValue.current_price;
         const pastPrice = pastData.market_data.current_price.usd;
         missedAmount = Number(amountValue) / pastPrice * currentPrice;
         percentIncrease = missedAmount / amountValue * 100;
@@ -181,7 +181,7 @@ const Main = ({ loader }) => {
     }
     return (
       <div className="result">
-        <p>If you would have invested {priceFormat.format(amountValue)} starting on {dateValue}, you would have had today...</p>
+        <p>If you would have invested {priceFormat.format(amountValue)} in {coinValue.name} starting on {dateValue}, you would have had today...</p>
         <div className="missed">
           { missedAmount ? priceFormat.format(missedAmount) : "calculating result..." }
         </div>
@@ -207,7 +207,7 @@ const Main = ({ loader }) => {
       if (step === 2) {
         setLoading(true);
         const pastDate = dateValue.split('-').reverse().join('-');
-        getHistorical(coinValue, pastDate, (data) => {
+        getHistorical(coinValue.id, pastDate, (data) => {
           setPastData(data);
           setLoading(false);
         });
@@ -217,9 +217,12 @@ const Main = ({ loader }) => {
   }
 
   const startOver = () => {
-    setCoinValue('');
+    setCoinValue(null);
     setStep(0);
   }
+
+  const Ads = React.lazy(() => isClient() ? import('../Ads/Ads') : '');
+  const Heatmap = React.lazy(() => isClient() ? import('../Heatmap/Heatmap') : 'heatmap of market capitalization');
 
   return (
     <>
@@ -238,7 +241,7 @@ const Main = ({ loader }) => {
                 : <Button onClick={startOver}>Start over</Button> }
             </Col>
             <Col lg={{ span: 4, offset: 1 }}>
-              <TopCoins coins={coins} />
+              <TopCoins coins={coins} setCoinValue={setCoinValue} />
             </Col>
           </Row>
         </Container>
@@ -248,11 +251,15 @@ const Main = ({ loader }) => {
           <Col>
             <ATH data={coins} />
           </Col>
-          <Ads />
+          <Suspense>
+            <Ads />
+          </Suspense>
         </Row>
         <Row>
           <Col>
-            <Heatmap data={coins.slice(0, 30)} />
+            <Suspense>
+              <Heatmap data={coins.slice(0, 30)} />
+            </Suspense>
           </Col>
           <Col>
             <Trends data={trends} rates={rates} />

@@ -13,3 +13,5 @@ export const formatBigNumber = (amount) => {
   }
   return amount.toFixed(2);
 };
+
+export const isClient = () => typeof window !== 'undefined';

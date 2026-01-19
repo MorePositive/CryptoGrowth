@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header/Header';
 import Main from './components/Main/Main';
 import About from './components/About/About';
+import Support from './components/Support/Support';
 import Footer from './components/Footer/Footer';
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<Main loader={setLoading}/>} />
         <Route path="/about" element={<About />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
       <Footer />
     </div>

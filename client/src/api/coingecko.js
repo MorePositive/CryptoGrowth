@@ -1,5 +1,9 @@
+import { API_KEY } from './config'
+import { withQuery } from './utils';
+ 
 const api = (path, cb) => {
-    return fetch('https://api.coingecko.com/api/v3' + path)
+    const formattedPath = withQuery(path);
+    return fetch(`https://api.coingecko.com/api/v3${formattedPath}x_cg_demo_api_key=${API_KEY}`)
       .then((res) => res.json())
       .then((data) => cb(data),
       err => {

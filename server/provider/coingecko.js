@@ -1,4 +1,5 @@
 const https = require('https');
+const { API_KEY } = require('../../client/src/api/config');
 
 // response example
 
@@ -31,7 +32,7 @@ const https = require('https');
 
 
 exports.getList = (cb) => {
-    const req = https.request('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=500&page=1&sparkline=false', (res) => {
+    const req = https.request(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=500&page=1&sparkline=false&x_cg_demo_api_key=${API_KEY}`, (res) => {
         let json = '';
         res.on('data', (data) => json += data);
         res.on('end', () => {

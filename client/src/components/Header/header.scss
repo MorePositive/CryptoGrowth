@@ -3,5 +3,33 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 20vh;
+  padding-top: 0.5rem;
+
+  a {
+    text-decoration: none;
+
+    * {
+      margin-top: 10px;
+    }
+
+    .logo {
+      mask-image: url('../../../public/logo.svg');
+      mask-repeat: no-repeat;
+      float: left;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(30deg, #9F1FED, #645FF2);
+      -webkit-mask-size: 100%;
+      margin-right: 1rem;
+    }
+    h1 {
+      text-decoration: none;
+      text-align: left;
+    }
+  }
+
+  .header_description {
+    padding-top: 1.8rem;
+    text-align: left;
+  }
 }

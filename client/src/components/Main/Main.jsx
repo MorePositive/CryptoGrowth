@@ -17,7 +17,7 @@ export const Main = () => {
     <main className="highlight">
       <Container>
         <Row className="justify-content-md-between">
-          <Col md={4}>
+          <Col>
             <div className="block block-search container">
               <Col>Enter name of the coin</Col>
               <Col><input type="search" value={coinValue} href="#search" className="search" onChange={(e) => setCoinValue(e.target.value)}></input></Col>
@@ -32,10 +32,10 @@ export const Main = () => {
              </div>
              <button className="btn btn-primary mt-3 w25">{isAllDone ? 'Submit' : 'Next'}</button>
           </Col>
+          <Col md={{ span: 4, offset: 2 }}>
+            <TopCoins />
+          </Col>
         </Row>
-      </Container>
-      <Container>
-        <TopCoins />
       </Container>
     </main>
   )

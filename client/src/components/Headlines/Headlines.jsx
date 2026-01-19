@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 export const Headlines = () => {
   const [data, setData] = useState(null);
   useEffect(() => {
-    fetch('https://newsdata.io/api/1/news?apikey=014d9c6bc04e47e5a34fe95e1e3b1b0b&q=crypto&language=en')
+    /*fetch('https://newsdata.io/api/1/news?apikey=014d9c6bc04e47e5a34fe95e1e3b1b0b&q=crypto&language=en')
       .then((res) => res.json())
-      .then((data) => setData(data.coins));
+      .then((data) => setData(data.coins));*/
   }, []);
 
   return (

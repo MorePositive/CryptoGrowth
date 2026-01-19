@@ -9,10 +9,11 @@ export const Trends = ({ rates }) => {
     getTrends((data) => setData(data.coins));
   }, []);
 
+  const formatNumber = (num) => num.toLocaleString(undefined, { minimumFractionDigits: 3 });
   const getPrice = (price_btc) => {
     return rates?.usd
-      ? '$' + (price_btc * rates.usd.value)
-      : price_btc + ' BTC'
+      ? '$' + formatNumber(price_btc * rates.usd.value)
+      : formatNumber(price_btc) + ' BTC'
   }
 
   return (

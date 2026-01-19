@@ -9,3 +9,6 @@ const api = (path, cb) => {
 
 export const getTrends = (cb) => api('/search/trending', cb);
 export const getRates = (cb) => api('/exchange_rates', cb);
+export const getHistorical = (pastDate, cb) => {
+    api('/coins/bitcoin/history?date=' + pastDate + '&localization=false', cb)
+};

@@ -11,6 +11,7 @@
   "scripts": {
     "start": "node server/index.js",
     "build": "cd client && npm run build",
+    "daily-job": "node server/jobs/daily.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

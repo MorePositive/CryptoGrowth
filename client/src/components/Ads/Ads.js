@@ -14,13 +14,13 @@ const Ads = () => {
 
   return (
     <>
-      (isClient() && data ?
+      {isClient() && data &&
         <Col>
           <Card className="block">
               <Card.Body className="block-ads">{data}</Card.Body>
           </Card>
         </Col>
-      : '')
+      }
     </>
   );
 };

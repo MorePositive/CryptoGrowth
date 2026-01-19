@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { getCoins, getRates, getTrends } from '../../api/coingecko';
 
@@ -52,15 +52,11 @@ const Main = () => {
           <Col>
             <ATH data={coins} />
           </Col>
-          <Suspense>
-            <Ads />
-          </Suspense>
+          <Ads />
         </Row>
         <Row>
           <Col>
-            <Suspense>
-              <Heatmap data={coins.slice(0, 30)} />
-            </Suspense>
+            <Heatmap data={coins.slice(0, 30)} />
           </Col>
           <Col>
             <Trends data={trends} rates={rates} />

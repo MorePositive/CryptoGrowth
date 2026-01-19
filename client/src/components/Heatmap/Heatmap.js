@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Card } from 'react-bootstrap';
 import { formatBigNumber, isClient } from '../../helpers';
 import './heatmap.scss';
@@ -91,7 +91,7 @@ const Heatmap = ({ data }) => {
         <Card.Title>Market Capitalization (top {data?.length})</Card.Title>
         <Card.Body className="block-heatmap">
             { dataset
-            ? <Chart options={options} series={options.series} />
+            ? <Suspense><Chart options={options} series={options.series} /></Suspense>
             : 'no data yet' }
         </Card.Body>
     </Card>

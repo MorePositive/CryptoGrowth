@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { isClient } from '../../helpers';
@@ -303,12 +303,16 @@ const Timeline = (props) => {
         <Col><h2>Investment: ${amountValue} worth of {coinValue} on {fromValue}</h2></Col>
       </Row>
       <Row>
-        {/*<Chart options={lineOptions} series={lineOptions.series} />*/}
+        <Suspense>
+          <Chart options={lineOptions} series={lineOptions.series} />
+        </Suspense>
       </Row>
       <Row>
         <Col>
           Financial stat
-          {/*<Chart options={ohlcOptions} series={ohlcOptions.series} />*/}
+          <Suspense>
+            <Chart options={ohlcOptions} series={ohlcOptions.series} />
+          </Suspense>
         </Col>
         <Col>
           The lowest return occured on 05-25-2020 at -50%

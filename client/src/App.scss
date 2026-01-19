@@ -13,6 +13,10 @@ h1 {
   background: $highlight-bg;
   color: #fff;
   margin: 1rem 0;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .block {
     margin-top: 1rem;

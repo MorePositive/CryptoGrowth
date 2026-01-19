@@ -55,6 +55,7 @@
     }
 
     .result {
+        position: relative;
         margin-top: 2rem;
         font-size: 20px;
 
@@ -90,4 +91,75 @@
             }
         }
     }
+}
+
+@keyframes firework {
+    0% { 
+        width: 0.5vmin;
+        opacity: 1;
+    }
+    100% { 
+        width: 45vmin; 
+        opacity: 0; 
+    }
+}
+
+.animation {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+
+    .firework {
+        position: absolute;
+        top: 30%;
+
+        i, i::before, i::after {
+            content: "";
+            opacity: 0;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            width: 0.5vmin;
+            aspect-ratio: 1;
+            background:
+            /* random backgrounds */
+            radial-gradient(circle, #f00 2px, #0000 0) 50% 00%,
+            radial-gradient(circle, #00f 3px, #0000 0) 00% 50%,
+            radial-gradient(circle, #0f0 5px, #0000 0) 50% 99%,
+            radial-gradient(circle, #f9f 2px, #0000 0) 99% 50%,
+            radial-gradient(circle, #9ff 3px, #0000 0) 80% 90%,
+            radial-gradient(circle, #99f 5px, #0000 0) 95% 90%,
+            radial-gradient(circle, #ff9 5px, #0000 0) 10% 60%,
+            radial-gradient(circle, #9f9 2px, #0000 0) 31% 80%,
+            radial-gradient(circle, #f99 3px, #0000 0) 80% 10%,
+            radial-gradient(circle, #66f 2px, #0000 0) 90% 23%,
+            radial-gradient(circle, #6f6 3px, #0000 0) 45% 20%,
+            radial-gradient(circle, #ff6 5px, #0000 0) 13% 24%
+            ;
+            background-size: 5px 5px;
+            background-repeat: no-repeat;
+            animation: firework 2s forwards;
+        }
+        i::before {
+            transform: translate(-50%, -50%) rotate(25deg) !important; 
+        }
+        i::after {
+            transform: translate(-50%, -50%) rotate(-37deg) !important;
+        }
+      }
+      .firework.one {
+        left: 40%;
+        top: 50%;
+        i, i::before, i::after {
+            animation-delay: 0.4s;
+        }
+      }
+      .firework.two {
+        left: 60%;
+        top: 70%;
+        i, i::before, i::after {
+            animation-delay: 0.8s;
+        }
+      }
 }

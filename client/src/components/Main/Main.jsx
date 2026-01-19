@@ -181,6 +181,13 @@ export const Main = ({ loader }) => {
         { percentIncrease &&
           <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
         }
+        { missedAmount &&
+          <div className="animation">
+            <div className="firework"><i></i></div>
+            <div className="firework one"><i></i></div>
+            <div className="firework two"><i></i></div>
+          </div>
+        }
       </div>
     )
   }

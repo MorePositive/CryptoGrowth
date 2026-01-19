@@ -1,5 +1,6 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import { getRates } from './api/coingecko';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -7,10 +8,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Header } from './components/Header/Header';
 import { Main } from './components/Main/Main';
 import { Trends } from './components/Trends/Trends';
+import { Ads } from './components/Ads/Ads';
 import { Headlines } from './components/Headlines/Headlines';
 import { Footer } from './components/Footer/Footer';
 
 function App() {
+  const [rates, setRates] = useState(null);
+  useEffect(() => {
+    getRates((data) => setRates(data.rates));
+  }, []);
+
   return (
     <div className="App">
       <Header />
@@ -22,28 +29,19 @@ function App() {
               <Card.Body>Some graphics? i.e. comparison of S&P with total crypto market</Card.Body>
             </Card>
           </Col>
-          <Col xs="4">
-            <Card>
-              <Card.Body>Ads block</Card.Body>
-            </Card>
-          </Col>
+          <Col xs="4"><Ads /></Col>
         </Row>
         <Row>
-          <Col xs="5">
+          <Col xs="6">
             <Card><Card.Body>Capitalization of top 10 assets?</Card.Body></Card>
           </Col>
-          <Col xs="7">
-            <Card>
-              <Card.Title>Trending coins</Card.Title>
-              <Card.Body><Trends/></Card.Body>
-            </Card>
-          </Col>
+          <Col xs="6"><Trends rates={rates} /></Col>
         </Row>
         <Row>
           <Col>
             <Card>
               <Card.Title>Latest headlines</Card.Title>
-              <Card.Body><Headlines/></Card.Body></Card>
+              <Card.Body><Headlines /></Card.Body></Card>
           </Col>
         </Row>
       </Container>

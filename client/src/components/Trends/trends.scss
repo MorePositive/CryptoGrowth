@@ -1,0 +1,21 @@
+.block-trends {
+    .symbol {
+        text-align: right;
+        text-transform: uppercase;
+        color: #555;
+        font-weight: bold;
+        font-size: 12px;
+    }
+    .name {
+        text-align: left;
+    }
+
+    table {
+        tr td {
+            padding: 0.5rem 0;
+        }
+        tr:nth-child(odd) {
+            background: #f8f8f8;
+        }
+    }
+}

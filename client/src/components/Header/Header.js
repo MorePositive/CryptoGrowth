@@ -9,18 +9,22 @@ const Header = () => {
     <header className="header">
       <Container>
         <Row>
-          <Col xs={{ span: 4, offset: 2 }} className="align-self-center">
+          <Col lg={{ span: 4, offset: 2 }} className="align-self-center">
             <Link to="/" className="logo">
               <div className="icon"></div>
               <h1 className="header_title">{ HEADING.TITLE }</h1>
             </Link>
           </Col>
-          <Col xs={4} className="row">
-            <div className="col header_description">{ HEADING.DESCRIPTION }</div>
-            <ul className="col menu">
-              <li><Link to="/about">About</Link></li>
-              <li><Link to="/support">Support</Link></li>
-            </ul>
+          <Col lg={4}>
+            <Container>
+              <Row>
+                <div className="col header_description">{ HEADING.DESCRIPTION }</div>
+                <ul className="col menu">
+                  <li><Link to="/about">About</Link></li>
+                  <li><Link to="/support">Support</Link></li>
+                </ul>
+              </Row>
+            </Container>
           </Col>
         </Row>
       </Container>

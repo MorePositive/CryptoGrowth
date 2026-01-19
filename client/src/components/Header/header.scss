@@ -51,6 +51,7 @@
     display: inline-block;
     margin: 2px;
     text-decoration: none !important;
+    transition: all ease 0.2s;
 
     &:hover {
       background: #38BDD1;

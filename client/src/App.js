@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Table, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>Crypto project</h1>
+        <h1>Cryptosomething</h1>
         <p>Check out how much did you miss on crypto!</p>
       </header>
       <main className="highlight">

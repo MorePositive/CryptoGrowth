@@ -60,8 +60,8 @@ const configureSSR = () => {
 const startServer = () => {
     var serverOptions;
     try {
-        serverOptions.key = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/privkey.pem')
-        serverOptions.cert = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/fullchain.pem')
+        serverOptions.key = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/privkey.pem');
+        serverOptions.cert = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/fullchain.pem');
     } catch(err) {
         console.log('Cannot read certificate and key!', err.message);
         PORT = 80;

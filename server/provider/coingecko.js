@@ -31,7 +31,7 @@ const https = require('https');
 
 
 exports.getList = (cb) => {
-    const req = https.request('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false', (res) => {
+    const req = https.request('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=500&page=1&sparkline=false', (res) => {
         let json = '';
         res.on('data', (data) => json += data);
         res.on('end', () => {

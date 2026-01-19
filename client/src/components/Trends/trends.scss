@@ -11,9 +11,15 @@
     }
 
     table {
-        tr td {
-            padding: 0.5rem 0;
-            cursor: default;
+        tr {
+            transition: all 0.1s ease;
+            td {
+                padding: 0.5rem 0;
+                cursor: default;
+            }
+        }
+        img {
+            width: 25px;
         }
         tr:nth-child(odd) {
             background: #f8f8f8;

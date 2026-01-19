@@ -26,7 +26,7 @@ export const Trends = ({ rates }) => {
                   if(i>10) return null;
                   return <tr key={i}>
                     <td className="symbol">{coin.item.symbol}</td>
-                    <td><img src={coin.item.thumb} alt=""/></td>
+                    <td><img src={coin.item.thumb} alt="" /></td>
                     <td className="name">{coin.item.name}</td>
                     <td>{getPrice(coin.item.price_btc)}</td>
                   </tr>;

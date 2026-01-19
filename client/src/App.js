@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       <div className={'loader ' + (loading ? 'loading' : 'loaded')}><div className="loader_logo"></div></div>
       <Header />
-      <Main coins={coins} />
+      <Main coins={coins} loader={setLoading} />
       <Container>
         <Row>
           <Col>

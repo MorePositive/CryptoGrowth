@@ -1,36 +1,60 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
 import { getHistorical } from '../../api/coingecko';
+import './main.scss';
 
 // Components
 import { TopCoins } from '../TopCoins/TopCoins';
 
 const customStyles = {
-  menu: (provided, state) => ({
-    ...provided,
-    borderBottom: '1px dotted pink',
-    color: state.selectProps.menuColor,
-    padding: 20,
-  })
-};
+  control: (styles) => ({
+    ...styles,
+    padding: '6px 10px',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    color: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderColor: 'rgba(255,255,255,0.5)',
+    boxShadow: '#5481e6 5px 5px'
+  }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    return {
+      ...styles,
+      backgroundColor: 'rgba(255,255,255,0.6)',
+      color: '#000',
+      cursor: isDisabled ? 'not-allowed' : 'default',
+      ':hover': {
+        ...styles[':hover'],
+        backgroundColor: '#ddd',
+        cursor: 'pointer'
+      }
+    };
+  },
+  input: (styles) => ({ ...styles, color: '#fff' }),
+  placeholder: (styles) => ({ ...styles, color: '#ccc', fontWeight: 'normal' }),
+  singleValue: (styles, { data }) => ({ ...styles, color: '#fff' })  
+}
 
-export const Main = ({ coins }) => {
+export const Main = ({ coins, loader }) => {
+  const setLoading = (state) => {
+    loader(state);
+  };
+
+  var oldDate = new Date();
+  oldDate.setFullYear(oldDate.getFullYear()-5);
+
   const [coinValue, setCoinValue] = useState('');
-  const [amountValue, setAmountValue] = useState(0);
-  const [dateValue, setDateValue] = useState('');
+  const [amountValue, setAmountValue] = useState(1000);
+  const [dateValue, setDateValue] = useState(oldDate.toLocaleDateString('en-CA'));
   const [pastData, setPastData] = useState(null);
-  const [missedAmount, setMissedAmount] = useState('');
   const [step, setStep] = useState(0);
-  const [loading, setLoading] = useState(false);
 
-  const isAllDone = coinValue && amountValue && dateValue;
-  //pull options real time from "
-
-  useEffect(() => {
-    if (pastData) calculateMissedAmount();
-  }, [pastData])
+  var priceFormat = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
 
   const onSearch = (input, cb) => {
     fetch('/api/search/' + input.trim())
@@ -58,12 +82,20 @@ export const Main = ({ coins }) => {
     return true;
   }
 
-  const generateFirstStep = () => {
+  const renderStep = () => {
+    return [
+      renderSearchStep,
+      renderAmountStep,
+      renderDateStep,
+      renderResults
+    ][step]()
+  }
+
+  const renderSearchStep = () => {
     return (
-      <>
-        <Col>Enter name of the coin</Col>
+      <div className="search">
+        <Col>Choose crypto asset: </Col>
         <Select
-          className="coins-search"
           styles={customStyles}
           menuColor="grey"
           isSearchable={true}
@@ -71,90 +103,101 @@ export const Main = ({ coins }) => {
           loadOptions={onSearch}
           loadingMessage={loadingMessage}
           noOptionsMessage={noOptions}
+          escapeClearsValue={false}
         />
-      </>
+      </div>
     )
   }
 
-  const generateSecondStep = () => {
+  const renderAmountStep = () => {
     return (
-      <>
-        <Col>Enter investments amount</Col>
-        <Col>
-        <input 
-          type="text" 
-          value={amountValue} 
-          href="#amount" 
-          className="amount" 
-          onChange={(e) => setAmountValue(e.target.value)} 
-        />
+      <div className="amount">
+        <Col>Your investment: </Col>
+        <Col className="field">
+          <div className="input">
+            <input 
+              type="text" 
+              value={amountValue} 
+              href="#amount" 
+              className="amount" 
+              onChange={(e) => setAmountValue(e.target.value)} 
+            />
+          </div>
         </Col>
-      </>
+      </div>
     )
   }
 
-  const generateThirdStep = () => {
+  const renderDateStep = () => {
     return (
-      <>
-        <Col>Select date</Col>
-        <Col>
-        <input 
-          type="date" 
-          value={dateValue} 
-          href="#date" 
-          className="date" 
-          onChange={(e) => setDateValue(e.target.value)} 
-        />
+      <div className="date">
+        <Col>From date: </Col>
+        <Col className="field">
+          <input 
+            type="date" 
+            value={dateValue} 
+            href="#date" 
+            className="date" 
+            onChange={(e) => setDateValue(e.target.value)} 
+          />
         </Col>
-      </>
+      </div>
     )
   }
 
-  const calculateMissedAmount = () => {
-    const selectedCoinCurrentPrice = coins.find(({ id }) => id === coinValue).current_price;
-    const selectedCoinPastPrice = pastData.market_data.current_price.usd;
-    const missed = Number(amountValue) / selectedCoinPastPrice * selectedCoinCurrentPrice;
-    setLoading(false);
-    setMissedAmount(missed);
+  const renderResults = () => {
+    var missedAmount;
+    if(pastData) {
+      const currentPrice = coins.find(({ id }) => id === coinValue).current_price;
+      const pastPrice = pastData.market_data.current_price.usd;
+      missedAmount = Number(amountValue) / pastPrice * currentPrice;
+    }
+    return (
+      <div className="result">
+        <div className="missed">{ missedAmount
+        ? priceFormat.format(missedAmount)
+        : "calculating result..." }</div>
+      </div>
+    )
   }
 
-  const onHandleClick = () => {
+  const nextStep = () => {
     const isValid = validateInputs();
     if (!isValid) return;
-    setStep(step => step + 1);
-    if (isAllDone) {
-      setLoading(true);
-      const pastDate = dateValue.split('-').reverse().join('-');
-      getHistorical(coinValue, pastDate, (data) => setPastData(data));
-    }
+    setStep(step => {
+      if (step === 2) {
+        setLoading(true);
+        const pastDate = dateValue.split('-').reverse().join('-');
+        getHistorical(coinValue, pastDate, (data) => {
+          setPastData(data);
+          setLoading(false);
+        });
+      }
+      return step + 1;
+    });
   }
 
-  const steps = {
-    0: generateFirstStep(),
-    1: generateSecondStep(),
-    2: generateThirdStep()
+  const startOver = () => {
+    setCoinValue('');
+    setStep(0);
   }
 
   return (
     <main className="highlight">
       <Container>
-        <Row className="justify-content-md-between">
-          <Col>
-            <div className="mt-4 block-search d-flex justify-content-center container">
-              <Steps current={step}>
-                <Steps.Item title="Choose Coin" />
-                <Steps.Item title="Enter Amount" />
-                <Steps.Item title="Select Date" />
-              </Steps>
-            </div>
-            <div className="block-search container">
-              { steps[step] }
-              { missedAmount && `${missedAmount.toFixed(0)}$` }
-              { loading && <div className="loader"><div className="loader_logo"></div></div> }
-             </div>
-             { step < 3 && <button className="btn btn-primary mt-3 w25" onClick={onHandleClick}>{isAllDone ? 'Submit' : 'Next'}</button> }
+        <Row>
+          <Col xs={6} className="start-form">
+            <Steps current={step}>
+              <Steps.Item title="Choose asset" />
+              <Steps.Item title="Your investment" />
+              <Steps.Item title="Select Date" />
+            </Steps>
+            { renderStep() }
+            { step < 3
+              ? <Button onClick={nextStep}>{step < 2 ? 'Next' : 'Submit'}</Button>
+              : <Button onClick={startOver}>Start over</Button> }
           </Col>
-          <Col md={{ span: 4, offset: 2 }}>
+          <Col xs={4}>
             <TopCoins coins={coins} />
           </Col>
         </Row>

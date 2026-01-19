@@ -14,12 +14,18 @@ import { Footer } from './components/Footer/Footer';
 
 function App() {
   const [rates, setRates] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     getRates((data) => setRates(data.rates));
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000)
   }, []);
 
   return (
     <div className="App">
+      { loading && <div className="loader"><div className="loader_logo"></div></div> }
       <Header />
       <Main />
       <Container>

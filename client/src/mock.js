@@ -1,6 +1,6 @@
 export const mock = [
-  {name: 'bitcoin', value: 'btc'},
-  {name: 'etherium', value: 'eth'},
-  {name: 'polkadot', value: 'dot'},
-  {name: 'cosmos', value: 'atom'},
+  { label: 'Bitcoin', value: 'btc'},
+  { label: 'Etherium', value: 'eth'},
+  { label: 'Polkadot', value: 'dot'},
+  { label: 'Cosmos', value: 'atom'},
 ];

@@ -3,15 +3,15 @@ import { Card } from 'react-bootstrap';
 import { getTrends } from '../../api/coingecko';
 import './trends.scss';
 
-export const Trends = (rates) => {
+export const Trends = ({ rates }) => {
   const [data, setData] = useState(null);
   useEffect(() => {
     getTrends((data) => setData(data.coins));
   }, []);
 
-  var getPrice = (price_btc) => {
-    return rates && rates.usd
-      ? '$' + (price_btc * rates)
+  const getPrice = (price_btc) => {
+    return rates?.usd
+      ? '$' + (price_btc * rates.usd.value)
       : price_btc + ' BTC'
   }
 
@@ -21,7 +21,7 @@ export const Trends = (rates) => {
         <Card.Title>Trending coins</Card.Title>
         <Card.Body>
             <table width="100%"><tbody>
-              {data.map(function(coin, i) {
+              {data.map((coin, i) => {
                   return <tr key={i}>
                     <td className="symbol">{coin.item.symbol}</td>
                     <td><img src={coin.item.thumb} alt=""/></td>

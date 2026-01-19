@@ -41,7 +41,8 @@ function App() {
           <Col>
             <Card>
               <Card.Title>Latest headlines</Card.Title>
-              <Card.Body><Headlines /></Card.Body></Card>
+              <Card.Body><Headlines /></Card.Body>
+            </Card>
           </Col>
         </Row>
       </Container>

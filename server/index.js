@@ -27,6 +27,11 @@ app.get('/api/search/:term', (req, res) => {
     res.json({ term:term, count:results.length, results:results });
 });
 
+const api = require('./provider/cryptowatch');
+app.get('/api/ohlc/:coin/:after/:before/:period', (req, res) => {
+    api.getOHLC(req.params.coin, req.params.after, req.params.before, req.params.period, undefined, res);
+});
+
 const indexFile = fs.readFileSync(path.resolve(BUILD_DIR, 'index.html'), 'utf-8');
 require('./babel');
 const render = require('./render');

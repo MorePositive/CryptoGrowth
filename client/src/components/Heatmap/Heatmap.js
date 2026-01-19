@@ -1,11 +1,9 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import ApexChart from 'react-apexcharts';
-import { formatBigNumber } from '../../helpers';
+import { formatBigNumber, isClient } from '../../helpers';
 import './heatmap.scss';
 
 const Heatmap = ({ data }) => {
-  if (!data || !data.length) return ('no data yet');
 
   const COLORS = [ '#ff0000', '#ff6666', '#00ee00', '#66ee66' ];
   const getColor = (coin) => {
@@ -22,8 +20,8 @@ const Heatmap = ({ data }) => {
   };
   
   let reverseMap = {};
-  let total = data.reduce((a, coin) => a + coin.market_cap, 0);
-  let dataset = data.map((coin, n) => {
+  let total = data && data.reduce((a, coin) => a + coin.market_cap, 0);
+  let dataset = data && data.map((coin, n) => {
     reverseMap[coin.name] = coin;
     return {
         x: coin.name,
@@ -33,6 +31,8 @@ const Heatmap = ({ data }) => {
   });
 
   const options = {
+    type: 'treemap',
+    height: 290,
     series: [{
         data: dataset
     }],
@@ -84,12 +84,14 @@ const Heatmap = ({ data }) => {
     }
   };
 
+  const Chart = React.lazy(() => isClient() ? import('../Chart/Chart') : <div>Chart with market capitalization</div>);
+
   return (
     <Card className="block">
-        <Card.Title>Market Capitalization (top {data.length})</Card.Title>
+        <Card.Title>Market Capitalization (top {data?.length})</Card.Title>
         <Card.Body className="block-heatmap">
-            { data
-            ? <ApexChart options={options} series={options.series} type="treemap" height={290} />
+            { dataset
+            ? <Chart options={options} series={options.series} />
             : 'no data yet' }
         </Card.Body>
     </Card>

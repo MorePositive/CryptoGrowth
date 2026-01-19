@@ -4,7 +4,7 @@ import { Steps } from 'rsuite';
 import { priceFormat } from '../../helpers';
 import { Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { getHistorical } from '../../api/coingecko';
+import { getHistoricalValue } from '../../api/coingecko';
 import './hero.scss';
 
 const customStyles = {
@@ -179,7 +179,7 @@ const Hero = ({ coins }) => {
       if (step === 2) {
         setLoading(true);
         const pastDate = dateValue.split('-').reverse().join('-');
-        getHistorical(coinValue.id, pastDate, (data) => {
+        getHistoricalValue(coinValue.id, pastDate, (data) => {
           setTimeout(() => {
             setPastData(data);
             setLoading(false);

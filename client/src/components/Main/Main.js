@@ -1,14 +1,16 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { getCoins, getRates, getTrends } from '../../api/coingecko';
-import { isClient } from '../../helpers';
 
 // Components
 import Hero from '../Hero/Hero';
 import TopCoins from '../TopCoins/TopCoins';
 import Trends from '../Trends/Trends';
+import Ads from '../Ads/Ads';
 import ATH from '../ATH/ATH';
+import Heatmap from '../Heatmap/Heatmap';
 import Headlines from '../Headlines/Headlines';
+import './main.scss';
 
 const Main = () => {
 
@@ -23,15 +25,12 @@ const Main = () => {
       getCoins(data => setCoins(data)),
       getTrends(data => setTrends(data.coins.slice(0, 10)))
     ]).then(() => {
-      setLoading("render");
+      setLoading('render');
       setTimeout(() => {
         setLoading(false);
       }, 1000);
     });
   }, []);
-
-  const Ads = React.lazy(() => isClient() ? import('../Ads/Ads') : '');
-  const Heatmap = React.lazy(() => isClient() ? import('../Heatmap/Heatmap') : 'heatmap of market capitalization');
 
   return (
     <>

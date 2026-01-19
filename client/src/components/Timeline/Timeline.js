@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
-import { getHistorical } from '../../api/coingecko';
-import ApexChart from 'react-apexcharts';
+import { isClient } from '../../helpers';
 
 const Timeline = (props) => {
 
@@ -11,9 +10,14 @@ const Timeline = (props) => {
   const [coinValue, setCoinValue] = useState(searchParams.get('coin'));
   const [amountValue, setAmountValue] = useState(searchParams.get('amount'));
   const [fromValue, setFromValue] = useState(searchParams.get('from'));
+  const [ohlc, setOHLC] = useState(null);
 
   useEffect(() => {
-    // get historical data in batch
+    let from = Math.round(new Date(fromValue).getTime() / 1000);
+    let before = Math.round(Date.now() / 1000);
+    fetch(`/api/ohlc/${coinValue}/${from}/${before}/weekly`).then((res) => {
+      console.log(123, res.json());
+    })
   }, []);
 
   const series = [
@@ -259,7 +263,9 @@ const Timeline = (props) => {
     }
   ];
 
-  const options = {
+  const lineOptions = {
+    type: 'line',
+    height: 350,
     series: [{ data:series }],
     chart: {
       animations: {
@@ -283,18 +289,26 @@ const Timeline = (props) => {
     }
   };
 
+  const ohlcOptions = {
+    type: 'candlestick',
+    height: 350,
+    series: [{ data:series }]
+  }
+
+  const Chart = React.lazy(() => isClient() ? import('../Chart/Chart') : 'Chart with coin data');
+
   return (
     <Container>
       <Row>
         <Col><h2>Investment: ${amountValue} worth of {coinValue} on {fromValue}</h2></Col>
       </Row>
       <Row>
-        <ApexChart options={options} series={options.series} type="line" height={350} />
+        {/*<Chart options={lineOptions} series={lineOptions.series} />*/}
       </Row>
       <Row>
         <Col>
           Financial stat
-          <ApexChart options={options} series={options.series} type="candlestick" height={350} />
+          {/*<Chart options={ohlcOptions} series={ohlcOptions.series} />*/}
         </Col>
         <Col>
           The lowest return occured on 05-25-2020 at -50%

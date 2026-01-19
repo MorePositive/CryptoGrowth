@@ -184,8 +184,8 @@ const Main = ({ loader }) => {
           { missedAmount ? priceFormat.format(missedAmount) : "calculating result..." }
         </div>
         { percentIncrease && isProfitableInvestment
-          ? <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
-          : <p className="mt-2">That is a -{(100 - percentIncrease).toFixed(2)}% loss on your initial investment!</p>
+          ? <p className="mt-2">That is a {percentIncrease.toFixed(2) - 100}% increase (or {((percentIncrease/100)).toFixed(1)}X returns) on your initial investment!</p>
+          : <p className="mt-2">That is a -{(100 - percentIncrease).toFixed(2)}% loss on your initial investment {':('}</p>
         }
         { missedAmount && isProfitableInvestment &&
           <div className="animation">

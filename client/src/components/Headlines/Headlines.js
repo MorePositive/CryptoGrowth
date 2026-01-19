@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
+import { dateFormat } from '../../helpers';
 import './headlines.scss';
 
 const Headlines = () => {
@@ -12,10 +12,6 @@ const Headlines = () => {
         setData(data.articles.slice(0, 10));
       });
   }, []);
-
-  const dateFormat = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full'
-  });
 
   return (
     <Card className="block">

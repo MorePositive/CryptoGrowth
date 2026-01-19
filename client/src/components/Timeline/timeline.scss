@@ -1,0 +1,22 @@
+.block {
+    .loading {
+        width: 100%;
+        height: 350px;
+        background: rgba(255, 255, 255, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .spinner {
+            margin: 5px;
+
+            &::before, &::after {
+                border-color: #9F1FED #645FF2 transparent transparent;
+            }
+        }
+    }
+}
+
+.block-line .loading {
+    //height: 300px;
+}

@@ -140,7 +140,7 @@ const Hero = ({ coins, value }) => {
     );
   };
   const renderResults = () => {
-    let missedAmount;
+    let missedAmount = false;
     let percentIncrease;
     let isProfitableInvestment;
     if (pastData && pastData.market_data) {
@@ -154,8 +154,12 @@ const Hero = ({ coins, value }) => {
         console.log(err);
       }
     } else if (!loading) {
-      return <p>Try to change the date</p>
+      return <div>
+        <div>Something went wrong, perhaps this coin did not exist before this date. Try to move your "from date" closer to present.</div>
+        <Button variant="secondary" className="arrowed-rev" onClick={() => {setStep(2)}}>Go back</Button>
+      </div>
     }
+    
     return (
       <div className="result">
         <p>If you would have invested {priceFormat.format(amountValue)} in {coinValue.name} starting on {dateValue}, you would have had today...</p>
@@ -165,7 +169,7 @@ const Hero = ({ coins, value }) => {
         </div>
         { missedAmount && !loading ?
           (percentIncrease && isProfitableInvestment
-            ? <p className="mt-2">That is a {percentIncrease.toFixed(2) - 100}% increase (or {((percentIncrease/100)).toFixed(1)}X returns) on your initial investment!</p>
+            ? <p className="mt-2">That is a {(percentIncrease - 100).toFixed(2)}% increase (or {((percentIncrease/100)).toFixed(1)}X returns) on your initial investment!</p>
             : <p className="mt-2">That is a -{(100 - percentIncrease).toFixed(2)}% loss on your initial investment {':('}</p>
           ) : ''
         }

@@ -33,7 +33,7 @@ const Main = () => {
     });
   }, []);
 
-  const setfromList = useCallback((e) => setValue(e), [value]);
+  const setFromList = useCallback((e) => setValue(e), [value]);
 
   return (
     <>
@@ -45,7 +45,7 @@ const Main = () => {
               <Hero coins={coins} value={value} />
             </Col>
             <Col lg={{ span: 4, offset: 1 }}>
-              <TopCoins coins={coins} setCoinValue={setfromList} />
+              <TopCoins coins={coins} setCoinValue={setFromList} />
             </Col>
           </Row>
         </Container>

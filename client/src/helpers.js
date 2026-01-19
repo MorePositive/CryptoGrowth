@@ -20,3 +20,12 @@ export const priceFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD'
 });
+
+export const dateFormat = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'full'
+});
+
+export const dateShortFormat = new Intl.DateTimeFormat({
+  dateStyle: 'short'
+});
+

@@ -1,19 +1,9 @@
 @import "../../theme";
+@import '~rsuite/dist/rsuite.min.css';
 
 .start-form {
     margin: 1rem 0;
 
-    .row {
-        margin: 0.6rem 0;
-
-        div.field {
-            text-align: left;
-        }
-        div.label {
-            text-align: right;
-            line-height: 30px;
-        }
-    }
     .field > input, .field .input {
         box-shadow: #5481e6 5px 5px;
         background: rgba(255,255,255,0.1);
@@ -28,17 +18,19 @@
         outline: none;
     }
 
-
-    .search {
-        .label, .field {
-            margin: 1rem 0;
-        }
-        .label {
-            margin-top: 1.8rem;
-        }
+    .label, .field {
+        margin: 1rem 0;
+    }
+    .label {
+        margin-top: 1.8rem;
     }
 
-    .amount {
+    div.search {
+        margin-top: 2rem;
+    }
+
+    div.amount {
+        margin-top: 2rem;
         .field div {
             display: inline-block;
             
@@ -58,7 +50,44 @@
         }
     }
 
+    div.date {
+        margin-top: 2rem;
+    }
+
+    .result {
+        margin-top: 2rem;
+        font-size: 20px;
+
+        .missed {
+            margin-top: 1rem;
+            font-size: 30px;
+            font-weight: bold;
+        }
+    }
+
     button {
         margin-top: 1rem;
+    }
+
+    .rs-steps {
+        margin: 1rem 0;
+
+        .rs-steps-item-icon-wrapper {
+            border-color: #fff;
+            color: #fff;
+            background: transparent;
+        }
+        .rs-steps-item-content {
+            color: #fff !important;
+        }
+        .rs-steps-item-tail, .rs-steps-item-title:after {
+            border-color: #fff !important;
+        }
+        .rs-steps-item-status-process {
+            .rs-steps-item-icon-wrapper {
+                border-color: #38BDD1;
+                background: #38BDD1;
+            }
+        }
     }
 }

@@ -94,7 +94,7 @@ export const Main = ({ coins, loader }) => {
   const renderSearchStep = () => {
     return (
       <div className="search">
-        <Col>Choose crypto asset: </Col>
+        <Col className="label">Choose crypto asset: </Col>
         <Select
           styles={customStyles}
           menuColor="grey"
@@ -112,7 +112,7 @@ export const Main = ({ coins, loader }) => {
   const renderAmountStep = () => {
     return (
       <div className="amount">
-        <Col>Your investment: </Col>
+        <Col className="label">Your investment: </Col>
         <Col className="field">
           <div className="input">
             <input 
@@ -131,7 +131,7 @@ export const Main = ({ coins, loader }) => {
   const renderDateStep = () => {
     return (
       <div className="date">
-        <Col>From date: </Col>
+        <Col className="label">From date: </Col>
         <Col className="field">
           <input 
             type="date" 
@@ -146,17 +146,20 @@ export const Main = ({ coins, loader }) => {
   }
 
   const renderResults = () => {
-    var missedAmount;
+    var missedAmount, percentIncrease;
     if(pastData) {
       const currentPrice = coins.find(({ id }) => id === coinValue).current_price;
       const pastPrice = pastData.market_data.current_price.usd;
       missedAmount = Number(amountValue) / pastPrice * currentPrice;
+      percentIncrease = missedAmount / amountValue * 100;
     }
     return (
       <div className="result">
+        <p>If you would have invested {priceFormat.format(amountValue)} starting on {dateValue}, you would have had today...</p>
         <div className="missed">{ missedAmount
         ? priceFormat.format(missedAmount)
         : "calculating result..." }</div>
+        <p className="mt-2">That is a {percentIncrease.toFixed(2)}% increase (or {((percentIncrease/100)-1).toFixed(0)}X returns) on your initial investment!</p>
       </div>
     )
   }
@@ -185,11 +188,11 @@ export const Main = ({ coins, loader }) => {
   return (
     <main className="highlight">
       <Container>
-        <Row>
-          <Col xs={6} className="start-form">
+        <Row className="justify-content-md-center">
+          <Col xs={{ span: 4, offset: 1 }} className="start-form">
             <Steps current={step}>
               <Steps.Item title="Choose asset" />
-              <Steps.Item title="Your investment" />
+              <Steps.Item title="Investment" />
               <Steps.Item title="Select Date" />
             </Steps>
             { renderStep() }
@@ -197,7 +200,7 @@ export const Main = ({ coins, loader }) => {
               ? <Button onClick={nextStep}>{step < 2 ? 'Next' : 'Submit'}</Button>
               : <Button onClick={startOver}>Start over</Button> }
           </Col>
-          <Col xs={4}>
+          <Col xs={{ span: 4, offset: 1 }}>
             <TopCoins coins={coins} />
           </Col>
         </Row>

@@ -9,18 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        ssh-key: ${{ secrets.SSH_KEY }}
-        
-        
     
-    - uses: actions/setup-node@v3
-      name: Setup Node ${{ matrix.node-version }}
-      with:
-        node-version: 16
-        
+    steps:
     - uses: appleboy/ssh-action@master
       name: Checkout repo
       with:
@@ -29,12 +19,10 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         run: git clone git@github.com:ilyaem/cryptogrowth.git cryptogrowth
       
-      
-      
-    - run: npm ci
+    - name: NPM install
+      run: npm ci
     
-    
-    - runs: 
-          echo 'Deployment completed'
-          npm run build
-          pm2 restart server
+    - name: Build & restart
+      run: |
+        npm run build
+        pm2 restart server

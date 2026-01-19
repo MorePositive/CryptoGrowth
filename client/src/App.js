@@ -17,15 +17,19 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getRates((data) => setRates(data.rates));
-    setTimeout(() => {
+    Promise.all([
+      getRates((data) => setRates(data.rates)),
+      new Promise(function(resolve) { 
+        setTimeout(resolve.bind(null), 1000)
+      })
+    ]).then(() => {
       setLoading(false);
-    }, 1000)
+    });
   }, []);
 
   return (
     <div className="App">
-      { loading && <div className="loader"><div className="loader_logo"></div></div> }
+      <div className={'loader ' + (loading ? 'loading' : 'loaded')}><div className="loader_logo"></div></div>
       <Header />
       <Main />
       <Container>

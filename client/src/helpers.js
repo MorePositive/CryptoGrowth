@@ -15,3 +15,8 @@ export const formatBigNumber = (amount) => {
 };
 
 export const isClient = () => typeof window !== 'undefined';
+
+export const priceFormat = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+});

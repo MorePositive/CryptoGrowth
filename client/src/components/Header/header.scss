@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1rem 0;
+  padding: 1.5rem 0;
 
   .logo {
     text-decoration: none !important;
@@ -31,8 +31,6 @@
   }
 
   .header_description {
-    padding: 0;
-    margin: 0;
     text-align: left;
     align-self: center;
   }
@@ -40,9 +38,10 @@
 
 .menu {
   list-style: none;
-  margin: 0;
-  padding: 0;
   text-align: right;
+  display: flex;
+  justify-content: end;
+  margin-bottom: 0;
 
   a {
     background: rgb(100, 95, 242, 0.2);

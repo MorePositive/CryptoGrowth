@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select/async';
 import { Steps } from 'rsuite';
-import { priceFormat } from '../../helpers';
 import { Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import ReactGA from 'react-ga';
+import { priceFormat } from '../../helpers';
 import { getHistoricalValue } from '../../api/coingecko';
 import './hero.scss';
 
@@ -89,6 +90,11 @@ const Hero = ({ coins, value }) => {
   };
 
   const renderSearchStep = () => {
+    const updateCoin = (e) => {
+      ReactGA.event({ category: 'widget', action: 'coin', label: e.value });
+      setCoinValue(coins.find(({ id }) => id === e.value));
+    };
+
     return (
       <div className="search">
         <Col className="label">Choose crypto asset: </Col>
@@ -96,7 +102,7 @@ const Hero = ({ coins, value }) => {
           value={{ label: coinValue?.name, value: coinValue?.id }}
           styles={customStyles}
           isSearchable={true}
-          onChange={e => setCoinValue(coins.find(({ id }) => id === e.value))}
+          onChange={updateCoin}
           loadOptions={onSearch}
           loadingMessage={loadingMessage}
           noOptionsMessage={noOptions}
@@ -148,10 +154,12 @@ const Hero = ({ coins, value }) => {
         missedAmount = Number(amountValue) / pastPrice * currentPrice;
         percentIncrease = missedAmount / amountValue * 100;
         isProfitableInvestment = percentIncrease > 100;
+        ReactGA.event({ category: 'widget', action: 'results', label: isProfitableInvestment ? 'profit' : 'loss' });
       } catch (err) {
         console.log(err);
       }
     } else if (!loading) {
+      ReactGA.event({ category: 'widget', action: 'coin-error', label: coinValue.id });
       return <div>
         <div>Something went wrong, perhaps this coin did not exist before this date. Try to move your "from date" closer to present.</div>
         <Button variant="secondary" className="arrowed-rev" onClick={() => {setStep(2)}}>Go back</Button>
@@ -185,6 +193,7 @@ const Hero = ({ coins, value }) => {
     const isValid = validateInputs();
     if (!isValid) return;
     setStep(step => {
+      ReactGA.event({ category: 'widget', action: 'step', value: step+2 });
       if (step === 2) {
         setLoading(true);
         const pastDate = dateValue.split('-').reverse().join('-');
@@ -202,6 +211,7 @@ const Hero = ({ coins, value }) => {
   const startOver = () => {
     setCoinValue(null);
     setStep(0);
+    ReactGA.event({ category: 'widget', action: 'step', value: 1 });
   }
 
   return (

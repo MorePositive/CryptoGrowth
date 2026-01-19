@@ -1,6 +1,7 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import { isClient, priceFormat, dateFormat, dateShortFormat } from '../../helpers';
 import { getInfo } from '../../api/coingecko';
 import { getOHLC } from '../../api/cryptowatch';
@@ -248,7 +249,7 @@ const Timeline = (props) => {
               {coinInfo && 
                 <>
                   <p dangerouslySetInnerHTML={{ __html:coinInfo.description.en}}></p>
-                  <p>It was created on {dateFormat.format(new Date(coinInfo.genesis_date))} and it's homepage is <a href={coinInfo.links.homepage[0]} target="_blank" rel="noreferrer">{coinInfo.links.homepage[0]}</a></p>
+                  <p>It was created on {dateFormat.format(new Date(coinInfo.genesis_date))} and it's homepage is <ReactGA.OutboundLink to={coinInfo.links.homepage[0]} target="_blank" eventLabel="coin-homepage">{coinInfo.links.homepage[0]}</ReactGA.OutboundLink></p>
                   <p>It has community score of {coinInfo.community_score.toFixed(2)} and has this presence ion social media:</p>
                   <ul>
                     <li>Telegram users: {coinInfo.community_data.telegram_channel_user_count || 'unknown'}</li>

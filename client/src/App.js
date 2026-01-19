@@ -1,5 +1,6 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,7 +12,15 @@ import Timeline from './components/Timeline/Timeline';
 import About from './components/About/About';
 import Support from './components/Support/Support';
 
+ReactGA.initialize('G-CRGYNB410N');
+
 const App = () => {
+
+  const location = useLocation();
+  useEffect(() => {
+      ReactGA.pageview(location.pathname + location.search);
+  }, [location]);
+
   return (
     <div className="App">
       <Header />

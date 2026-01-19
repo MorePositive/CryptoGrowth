@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path');
 const express = require('express');
 const app = express();
+const PORT_B = 3001;
 let PORT = 443;
 
 const BUILD_DIR = path.resolve(__dirname, '../client/build');
@@ -30,31 +31,54 @@ const configureServer = () => {
         res.json({ term:term, count:results.length, results:results });
     });
 
-    const api = require('./provider/cryptowatch');
+    const ohlcApi = require('./provider/cryptowatch');
     app.get('/api/ohlc/:coin/:after/:before/:period/:exchange', (req, res) => {
-        api.getOHLC(req.params.coin, req.params.after, req.params.before, req.params.period, req.params.exchange, res);
+        ohlcApi.getOHLC(req.params.coin, req.params.after, req.params.before, req.params.period, req.params.exchange, res);
+    });
+
+    const newsApi = require('./provider/newsapi');
+    app.get('/api/news/:searchTerm/:pageSize/', (req, res) => {
+        newsApi.getHeadlines(req.params.searchTerm, req.params.pageSize, res);
     });
 
     return true;
 };
 
 const configureSSR = () => {
-    let indexFile;
-    try {
-        indexFile = fs.readFileSync(path.resolve(BUILD_DIR, 'index.html'), 'utf-8');
-        require('./babel');
-        const render = require('./render');
-        app.enable('etag');
-        app.set('etag', 'weak');
-        app.get('*', (req, res) => {
-            render(req, res, indexFile);
-        });
+    const buildIndexPath = path.resolve(BUILD_DIR, 'index.html');
+    const publicIndexPath = path.resolve(__dirname, '../client/public/index.html');
 
-        return true;
-    } catch (err) {
-        console.log('Cannot read the build/index.html file, aborting the process');
-        return false
+    // Prefer the production build index if present
+    if (fs.existsSync(buildIndexPath)) {
+        try {
+            const indexFile = fs.readFileSync(buildIndexPath, 'utf-8');
+            require('./babel');
+            const render = require('./render');
+            app.enable('etag');
+            app.set('etag', 'weak');
+            app.get('*', (req, res) => {
+                render(req, res, indexFile);
+            });
+
+            return true;
+        } catch (err) {
+            console.log('Error reading build/index.html:', err && err.message ? err.message : err);
+            // fall through to try the public index
+        }
     }
+
+    // Fallback to the client/public/index.html during development
+    if (fs.existsSync(publicIndexPath)) {
+        console.log('build/index.html not found — using client/public/index.html as a fallback (development mode).');
+        app.get('*', (req, res) => {
+            res.sendFile(publicIndexPath);
+        });
+        return true;
+    }
+
+    // Nothing available — be explicit about what to do next
+    console.log('Cannot find build/index.html or client/public/index.html. Please run `npm run build` in the client folder and try again.');
+    return false;
 };
 
 const startServer = () => {
@@ -64,18 +88,18 @@ const startServer = () => {
         serverOptions.cert = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/fullchain.pem');
     } catch(err) {
         console.log('Cannot read certificate and key!', err.message);
-        PORT = 80;
+        PORT = PORT_B;
     }
 
-    https.createServer(serverOptions, app).listen(PORT, () => {
+    (PORT !== PORT_B ? https : http).createServer(serverOptions, app).listen(PORT, () => {
         console.log('Server listening on', PORT);
     });
     
-    if(PORT !== 80) {
+    if(PORT !== PORT_B) {
         http.createServer((req, res) => {
             res.writeHead(301, { 'Location': 'https://' + req.headers['host'] + req.url });
             res.end();
-        }).listen(80, () => {
+        }).listen(PORT_B, () => {
             console.log('Redirect server for HTTP started.');
         });
     }

@@ -2,7 +2,7 @@
 @import '~rsuite/dist/rsuite.min.css';
 
 .start-form {
-    margin-top: 1rem !important;
+    align-self: center;
 
     .field > input, .field .input {
         box-shadow: #5481e6 5px 5px;
@@ -80,6 +80,7 @@
         }
         .rs-steps-item-content {
             color: #fff !important;
+            text-align: left;
         }
         .rs-steps-item-tail, .rs-steps-item-title:after {
             border-color: #fff !important;

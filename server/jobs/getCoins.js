@@ -23,7 +23,7 @@ module.exports = (params) => {
                 list: result
             }));
 
-            params.log('Done.');
+            params.out('Done.');
             resolve();
         });
     });

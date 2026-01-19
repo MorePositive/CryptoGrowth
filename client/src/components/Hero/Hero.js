@@ -156,9 +156,11 @@ const Hero = ({ coins }) => {
           <div className={loading ? 'spinner' : ''}></div>
           <div>{ missedAmount ? priceFormat.format(missedAmount) : 'calculating result...' }</div>
         </div>
-        { percentIncrease && isProfitableInvestment
-          ? <p className="mt-2">That is a {percentIncrease.toFixed(2) - 100}% increase (or {((percentIncrease/100)).toFixed(1)}X returns) on your initial investment!</p>
-          : <p className="mt-2">That is a -{(100 - percentIncrease).toFixed(2)}% loss on your initial investment {':('}</p>
+        { missedAmount && !loading ?
+          (percentIncrease && isProfitableInvestment
+            ? <p className="mt-2">That is a {percentIncrease.toFixed(2) - 100}% increase (or {((percentIncrease/100)).toFixed(1)}X returns) on your initial investment!</p>
+            : <p className="mt-2">That is a -{(100 - percentIncrease).toFixed(2)}% loss on your initial investment {':('}</p>
+          ) : ''
         }
         { missedAmount && isProfitableInvestment &&
           <div className="animation">

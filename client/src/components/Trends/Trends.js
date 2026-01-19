@@ -1,9 +1,10 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import { getTrends } from '../../api/coingecko';
 import './trends.scss';
 
-export const Trends = ({ rates }) => {
+const Trends = ({ rates }) => {
   const [data, setData] = useState(null);
   useEffect(() => {
     getTrends((data) => setData(data.coins));
@@ -37,3 +38,5 @@ export const Trends = ({ rates }) => {
     ) : ''
   )
 };
+
+export default Trends;

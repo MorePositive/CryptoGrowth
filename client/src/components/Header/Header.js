@@ -1,8 +1,9 @@
+import React from 'react';
 import { HEADING } from '../../constants/header';
 import { Container, Row, Col } from 'react-bootstrap';
 import './header.scss';
 
-export const Header = () => {
+const Header = () => {
   return (
     <header className="header">
       <Container>
@@ -19,5 +20,7 @@ export const Header = () => {
         </Row>
       </Container>
     </header>
-  )
+  );
 };
+
+export default Header;

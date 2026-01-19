@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import Select from 'react-select/async';
@@ -6,10 +7,10 @@ import { getCoins, getHistorical, getRates } from '../../api/coingecko';
 import './main.scss';
 
 // Components
-import { TopCoins } from '../TopCoins/TopCoins';
-import { Trends } from '../Trends/Trends';
-import { Ads } from '../Ads/Ads';
-import { Headlines } from '../Headlines/Headlines';
+import TopCoins from '../TopCoins/TopCoins';
+import Trends from '../Trends/Trends';
+import Ads from '../Ads/Ads';
+import Headlines from '../Headlines/Headlines';
 
 const customStyles = {
   control: (styles) => ({
@@ -40,7 +41,7 @@ const customStyles = {
   singleValue: (styles, { data }) => ({ ...styles, color: '#fff' })  
 }
 
-export const Main = ({ loader }) => {
+const Main = ({ loader }) => {
   const oldDate = new Date();
   oldDate.setFullYear(oldDate.getFullYear()-5);
 
@@ -80,13 +81,13 @@ export const Main = ({ loader }) => {
         });
         cb(options || []);
       });
-  }
+  };
   const noOptions = (input) => {
     return 'Nothing found ' + (input ? 'for "' + input.inputValue + '"' : '') + ', try entering something else';
-  }
+  };
   const loadingMessage = (input) => {
     return 'Searching...';
-  }
+  };
 
   const validateInputs = () => {
     if ((step === 0 && !coinValue) || 
@@ -95,7 +96,7 @@ export const Main = ({ loader }) => {
       return false;
     }
     return true;
-  }
+  };
 
   const renderStep = () => {
     return [
@@ -103,8 +104,8 @@ export const Main = ({ loader }) => {
       renderAmountStep,
       renderDateStep,
       renderResults
-    ][step]()
-  }
+    ][step]();
+  };
 
   const renderSearchStep = () => {
     return (
@@ -120,8 +121,8 @@ export const Main = ({ loader }) => {
           escapeClearsValue={false}
         />
       </div>
-    )
-  }
+    );
+  };
 
   const renderAmountStep = () => {
     return (
@@ -139,8 +140,8 @@ export const Main = ({ loader }) => {
           </div>
         </Col>
       </div>
-    )
-  }
+    );
+  };
 
   const renderDateStep = () => {
     return (
@@ -156,8 +157,8 @@ export const Main = ({ loader }) => {
           />
         </Col>
       </div>
-    )
-  }
+    );
+  };
 
   const renderResults = () => {
     let missedAmount;
@@ -215,54 +216,56 @@ export const Main = ({ loader }) => {
 
   return (
     <>
-    <main className="highlight">
+      <main className="highlight">
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col xs={{ span: 4, offset: 1 }} className="start-form">
+              <Steps current={step}>
+                <Steps.Item title="Choose asset" />
+                <Steps.Item title="Investment" />
+                <Steps.Item title="Select Date" />
+              </Steps>
+              { renderStep() }
+              { step < 3
+                ? <Button onClick={nextStep}>{step < 2 ? 'Next' : 'Submit'}</Button>
+                : <Button onClick={startOver}>Start over</Button> }
+            </Col>
+            <Col xs={{ span: 4, offset: 1 }}>
+              <TopCoins coins={coins} />
+            </Col>
+          </Row>
+        </Container>
+      </main>
       <Container>
-        <Row className="justify-content-md-center">
-          <Col xs={{ span: 4, offset: 1 }} className="start-form">
-            <Steps current={step}>
-              <Steps.Item title="Choose asset" />
-              <Steps.Item title="Investment" />
-              <Steps.Item title="Select Date" />
-            </Steps>
-            { renderStep() }
-            { step < 3
-              ? <Button onClick={nextStep}>{step < 2 ? 'Next' : 'Submit'}</Button>
-              : <Button onClick={startOver}>Start over</Button> }
+        <Row>
+          <Col>
+            <Card>
+              <Card.Body>Some graphics? i.e. comparison of S&P with total crypto market</Card.Body>
+            </Card>
           </Col>
-          <Col xs={{ span: 4, offset: 1 }}>
-            <TopCoins coins={coins} />
+          <Ads />
+        </Row>
+        <Row>
+          <Col xs="6">
+            <Card><Card.Body>Capitalization of top 10 assets?</Card.Body></Card>
+          </Col>
+          <Col xs="6">
+            <Trends rates={rates} />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Card>
+              <Card.Title>Latest headlines</Card.Title>
+              <Card.Body>
+                <Headlines />
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
       </Container>
-    </main>
-    <Container>
-    <Row>
-      <Col>
-        <Card>
-          <Card.Body>Some graphics? i.e. comparison of S&P with total crypto market</Card.Body>
-        </Card>
-      </Col>
-      <Ads />
-    </Row>
-    <Row>
-      <Col xs="6">
-        <Card><Card.Body>Capitalization of top 10 assets?</Card.Body></Card>
-      </Col>
-      <Col xs="6">
-        <Trends rates={rates} />
-      </Col>
-    </Row>
-    <Row>
-      <Col>
-        <Card>
-          <Card.Title>Latest headlines</Card.Title>
-          <Card.Body>
-            <Headlines />
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
-  </Container>
-  </>
-  )
+    </>
+  );
 };
+
+export default Main;

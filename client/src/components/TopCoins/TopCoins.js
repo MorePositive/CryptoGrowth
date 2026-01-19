@@ -1,6 +1,7 @@
+import React from 'react';
 import './topcoins.scss';
 
-export const TopCoins = ({ coins }) => {
+const TopCoins = ({ coins }) => {
   const top10 = coins.slice(0, 8);
   return (
     <div className="block block-top">
@@ -18,3 +19,5 @@ export const TopCoins = ({ coins }) => {
     </div>
   )
 };
+
+export default TopCoins;

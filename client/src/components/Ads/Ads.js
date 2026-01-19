@@ -1,7 +1,8 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Card, Col } from 'react-bootstrap';
 
-export const Ads = () => {
+const Ads = () => {
   const [data, setData] = useState(null);
   useEffect(() => {
     setTimeout(() => {
@@ -15,5 +16,7 @@ export const Ads = () => {
           <Card.Body>{data}</Card.Body>
       </Card>
     </Col>
-  : '')
+  : '');
 };
+
+export default Ads;

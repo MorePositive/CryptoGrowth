@@ -1,0 +1,35 @@
+sudo apt-get install bc
+sudo git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+cd /opt/letsencrypt
+certbot-auto certonly --standalone
+
+-------
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install certbot
+
+sudo ufw allow 80
+sudo certbot certonly --standalone -d cryptogrowth.app
+sudo ls /etc/letsencrypt/live/cryptogrowth.app
+
+-------
+ssh-keygen
+cp id_rsa.pub authorized_keys
+chmod 700 .ssh/authorized_keys
+
+-------
+sudo apt update
+sudo apt upgrade
+sudo apt install -y curl
+# snap install certbot --classic # optional due to 404 on next line
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt install -y nodejs
+node -v
+
+-------
+npm install pm2@latest -g
+git clone git@github.com:ilyaem/cryptogrowth.git cryptogrowth
+-------
+npm i
+npm run build
+pm2 start ecosystem.config.js

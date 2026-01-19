@@ -1,8 +1,9 @@
 const fs = require('fs');
+const https = require('https');
 const path = require('path');
 const express = require('express');
-const PORT = process.env.PORT || 3001;
 const app = express();
+let PORT = 443;
 
 const BUILD_DIR = path.resolve(__dirname, '../client/build');
 const COINS_JSON = path.resolve(__dirname, 'coins.json');
@@ -41,6 +42,15 @@ app.get('*', (req, res) => {
     render(req, res, indexFile);
 });
 
-app.listen(PORT, () => {
+var serverOptions;
+try {
+    serverOptions.key = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/privkey.pem')
+    serverOptions.cert = fs.readFileSync('/etc/letsencrypt/live/cryptogrowth.app/fullchain.pem')
+} catch(err) {
+    console.log('Cannot read certificate and key!', err.message);
+    PORT = 80;
+}
+
+https.createServer(options, app).listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });

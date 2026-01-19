@@ -140,7 +140,7 @@ const Hero = ({ coins, value }) => {
     );
   };
   const renderResults = () => {
-    let missedAmount = false;
+    let missedAmount;
     let percentIncrease;
     let isProfitableInvestment;
     if (pastData && pastData.market_data) {
@@ -165,7 +165,7 @@ const Hero = ({ coins, value }) => {
         <p>If you would have invested {priceFormat.format(amountValue)} in {coinValue.name} starting on {dateValue}, you would have had today...</p>
         <div className="missed">
           <div className={loading ? 'spinner' : ''}></div>
-          <div>{ missedAmount ? priceFormat.format(missedAmount) : 'calculating result...' }</div>
+          <div>{ !loading && missedAmount ? priceFormat.format(missedAmount) : 'calculating result...' }</div>
         </div>
         { missedAmount && !loading ?
           (percentIncrease && isProfitableInvestment
